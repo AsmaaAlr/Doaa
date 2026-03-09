@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محرر الأدعية والأذكار</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #1a4731;
+      --green-mid: #2d6a4f;
+      --green-light: #e8f5ee;
+      --gold: #c9a84c;
+      --gold-light: #fdf6e3;
+      --red: #c0392b;
+      --red-light: #fdf0ee;
+      --bg: #f4f4f6;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1a202c;
+      --text-sub: #64748b;
+      --text-light: #94a3b8;
+      --shadow: 0 1px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Naskh Arabic', serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a4731, #2d6a4f);
+      color: #fff;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .header-title span { font-size: 1.4rem; }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+    .btn-primary   { background: var(--gold); color: #fff; }
+    .btn-primary:hover { background: #b8952a; }
+    .btn-green     { background: var(--green); color: #fff; }
+    .btn-green:hover { background: var(--green-mid); }
+    .btn-outline   { background: transparent; border: 1.5px solid var(--border); color: var(--text-sub); }
+    .btn-outline:hover { border-color: var(--green-mid); color: var(--green); }
+    .btn-danger    { background: var(--red); color: #fff; }
+    .btn-danger:hover { background: #a93226; }
+    .btn-sm { padding: 5px 12px; font-size: 0.82rem; border-radius: 6px; }
+    .btn-icon { padding: 6px; border-radius: 6px; background: transparent; border: 1.5px solid var(--border); color: var(--text-sub); cursor: pointer; font-size: 1rem; line-height: 1; transition: all 0.18s; }
+    .btn-icon:hover { border-color: var(--red); color: var(--red); }
+    .btn-icon.edit:hover { border-color: var(--green-mid); color: var(--green); }
+
+    /* ── Stats Bar ── */
+    .stats-bar {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .stat-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+    .stat-badge {
+      background: var(--green-light);
+      color: var(--green);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+    .stat-label { color: var(--text-sub); }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      padding: 16px 24px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 9px 16px 9px 40px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .search-box input:focus { outline: none; border-color: var(--green-mid); }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 1rem; pointer-events: none; }
+    .filter-select {
+      padding: 9px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .filter-select:focus { outline: none; border-color: var(--green-mid); }
+
+    /* ── Table ── */
+    .table-wrap {
+      padding: 0 24px 24px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    thead { background: #f8fafc; }
+    th {
+      padding: 12px 16px;
+      text-align: right;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9fafb; }
+
+    .td-id { color: var(--text-light); font-size: 0.8rem; width: 40px; }
+    .td-title { font-weight: 600; max-width: 160px; }
+    .td-text {
+      max-width: 280px;
+      font-family: 'Amiri', serif;
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .td-actions { width: 90px; white-space: nowrap; }
+    .td-actions { display: flex; gap: 6px; align-items: center; }
+
+    .cat-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .cat-morning   { background: #fff7e6; color: #b45309; }
+    .cat-evening   { background: #ede9fe; color: #6d28d9; }
+    .cat-prayer    { background: #e0f2fe; color: #0369a1; }
+    .cat-quran     { background: #dcfce7; color: #15803d; }
+    .cat-daily     { background: #fce7f3; color: #9d174d; }
+    .cat-protection{ background: #fee2e2; color: #b91c1c; }
+
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--green-light);
+      color: var(--green);
+      border-radius: 20px;
+      padding: 1px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .mood-pill {
+      display: inline-block;
+      background: #f1f5f9;
+      color: var(--text-sub);
+      border-radius: 20px;
+      padding: 1px 7px;
+      font-size: 0.72rem;
+      margin: 1px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-light);
+    }
+    .empty-state div { font-size: 2.5rem; margin-bottom: 12px; }
+
+    /* ── Drawer (slide-in panel) ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 300;
+    }
+    .overlay.open { display: block; }
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -520px;
+      width: 100%;
+      max-width: 520px;
+      height: 100%;
+      background: var(--card);
+      z-index: 301;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: -4px 0 30px rgba(0,0,0,0.15);
+    }
+    .drawer.open { right: 0; }
+
+    .drawer-header {
+      background: linear-gradient(135deg, #1a4731, #2d6a4f);
+      color: #fff;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .drawer-title { font-size: 1rem; font-weight: 700; }
+    .drawer-close {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .drawer-close:hover { background: rgba(255,255,255,0.3); }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .drawer-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+      flex-shrink: 0;
+      background: #f8fafc;
+    }
+
+    /* ── Form Fields ── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .field label .required { color: var(--red); }
+    .field input, .field textarea, .field select {
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.93rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none;
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.8;
+      direction: rtl;
+    }
+    .arabic-preview {
+      font-family: 'Amiri', serif;
+      font-size: 1.2rem;
+      text-align: center;
+      background: var(--gold-light);
+      border: 1px solid #e9c46a;
+      border-radius: 8px;
+      padding: 12px;
+      line-height: 2;
+      color: #1a1a1a;
+      min-height: 60px;
+      display: none;
+    }
+    .field-row { display: flex; gap: 12px; }
+    .field-row .field { flex: 1; }
+    .count-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #cbd5e1;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      right: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--green-mid); }
+    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(-18px); }
+    .count-num-wrap { display: none; }
+    .count-num-wrap.show { display: block; }
+
+    /* Moods checkboxes */
+    .moods-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .mood-check {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: all 0.18s;
+      user-select: none;
+    }
+    .mood-check input { display: none; }
+    .mood-check.checked {
+      background: var(--green-light);
+      border-color: var(--green-mid);
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ── Export Dialog ── */
+    .export-dialog {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 400;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .export-dialog.open { display: flex; }
+    .export-box {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .export-icon { font-size: 3rem; margin-bottom: 12px; }
+    .export-box h2 { font-size: 1.2rem; margin-bottom: 8px; }
+    .export-box p { font-size: 0.88rem; color: var(--text-sub); margin-bottom: 20px; line-height: 1.7; }
+    .export-steps {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: right;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+    .export-steps b { color: var(--green); }
+    .export-btns { display: flex; gap: 10px; justify-content: center; }
+
+    /* ── Delete Confirm ── */
+    .confirm-dialog {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 400;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .confirm-dialog.open { display: flex; }
+    .confirm-box {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .confirm-box .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .confirm-box h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .confirm-box p { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 20px; }
+    .confirm-btns { display: flex; gap: 10px; justify-content: center; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      z-index: 500;
+      transition: transform 0.3s;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
+
+    /* ── Unsaved badge ── */
+    .unsaved-dot {
+      display: none;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .unsaved-dot.show { display: inline-block; }
+
+    @media (max-width: 600px) {
+      .toolbar { padding: 12px 16px; }
+      .table-wrap { padding: 0 12px 20px; }
+      th, td { padding: 10px 10px; }
+      .td-text { display: none; }
+      .stats-bar { padding: 10px 16px; gap: 12px; }
+      header { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="header-title">
+    <span>✏️</span>
+    <span>محرر الأدعية والأذكار</span>
+    <span class="unsaved-dot" id="unsaved-dot" title="يوجد تغييرات غير محفوظة"></span>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.35)" onclick="openExport()">💾 حفظ وتصدير</button>
+    <a href="دليلك-الإسلامي-اليومي.html" target="_blank" class="btn btn-primary">🔗 عرض التطبيق</a>
+  </div>
+</header>
+
+<!-- Stats Bar -->
+<div class="stats-bar" id="stats-bar">
+  <!-- filled by JS -->
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="ابحث بالعنوان أو نص الدعاء..." oninput="applyFilters()">
+  </div>
+  <select class="filter-select" id="cat-filter" onchange="applyFilters()">
+    <option value="">كل الفئات</option>
+    <option value="morning">☀️ أذكار الصباح</option>
+    <option value="evening">🌙 أذكار المساء</option>
+    <option value="prayer">🕌 أدعية الصلاة</option>
+    <option value="quran">📖 أدعية قرآنية</option>
+    <option value="daily">🤲 أدعية يومية</option>
+    <option value="protection">🛡️ أدعية الحفظ والحماية</option>
+  </select>
+  <button class="btn btn-green" onclick="openDrawer()">＋ إضافة دعاء جديد</button>
+</div>
+
+<!-- Table -->
+<div class="table-wrap">
+  <table id="duas-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>العنوان</th>
+        <th>نص الدعاء</th>
+        <th>الفئة</th>
+        <th>عداد</th>
+        <th>الحالات</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      <tr><td colspan="7"><div class="empty-state"><div>⏳</div>جاري التحميل...</div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════ DRAWER ════ -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-title" id="drawer-title">➕ إضافة دعاء جديد</div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <div class="field">
+      <label>العنوان <span class="required">*</span></label>
+      <input type="text" id="f-title" placeholder="مثال: دعاء الصباح">
+    </div>
+
+    <div class="field">
+      <label>الفئة <span class="required">*</span></label>
+      <select id="f-category">
+        <option value="morning">☀️ أذكار الصباح</option>
+        <option value="evening">🌙 أذكار المساء</option>
+        <option value="prayer">🕌 أدعية الصلاة</option>
+        <option value="quran">📖 أدعية قرآنية</option>
+        <option value="daily">🤲 أدعية يومية</option>
+        <option value="protection">🛡️ أدعية الحفظ والحماية</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>نص الدعاء بالعربي <span class="required">*</span></label>
+      <textarea id="f-text" placeholder="اكتب نص الدعاء هنا..." oninput="updatePreview()"></textarea>
+      <div class="arabic-preview" id="arabic-preview"></div>
+    </div>
+
+    <div class="field">
+      <label>وصف الدعاء / فضله</label>
+      <textarea id="f-desc" placeholder="مثال: من قالها سبع مرات صباحاً ومساءً كفاه الله ما أهمه" style="min-height:70px"></textarea>
+    </div>
+
+    <div class="field">
+      <label>عداد التكرار</label>
+      <div class="count-toggle">
+        <label class="toggle-switch">
+          <input type="checkbox" id="f-count-toggle" onchange="toggleCount()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size:0.88rem;color:var(--text-sub)">تفعيل العداد</span>
+      </div>
+      <div class="count-num-wrap" id="count-num-wrap">
+        <input type="number" id="f-count" min="1" max="1000" placeholder="عدد التكرار (مثال: 7)" style="margin-top:8px">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>الحالات المناسبة</label>
+      <div class="moods-grid" id="moods-grid">
+        <label class="mood-check" data-mood="anxious" onclick="toggleMood(this)">
+          <input type="checkbox"> 😰 متوتر
+        </label>
+        <label class="mood-check" data-mood="sad" onclick="toggleMood(this)">
+          <input type="checkbox"> 😢 حزين
+        </label>
+        <label class="mood-check" data-mood="grateful" onclick="toggleMood(this)">
+          <input type="checkbox"> 🤲 شاكر
+        </label>
+        <label class="mood-check" data-mood="sick" onclick="toggleMood(this)">
+          <input type="checkbox"> 🤒 مريض
+        </label>
+        <label class="mood-check" data-mood="rizq" onclick="toggleMood(this)">
+          <input type="checkbox"> 💰 طالب رزق
+        </label>
+        <label class="mood-check" data-mood="guidance" onclick="toggleMood(this)">
+          <input type="checkbox"> 🌟 طالب هداية
+        </label>
+        <label class="mood-check" data-mood="protection" onclick="toggleMood(this)">
+          <input type="checkbox"> 🛡️ حماية
+        </label>
+      </div>
+    </div>
+
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-green" onclick="saveDua()">✓ حفظ</button>
+    <button class="btn btn-outline" onclick="closeDrawer()">إلغاء</button>
+  </div>
+</div>
+
+<!-- ════ EXPORT DIALOG ════ -->
+<div class="export-dialog" id="export-dialog">
+  <div class="export-box">
+    <div class="export-icon">💾</div>
+    <h2>تصدير ملف البيانات</h2>
+    <p>سيتم تحميل ملف <strong>duas-data.js</strong> محدّث بكل التغييرات التي أجريتها.</p>
+    <div class="export-steps">
+      <b>خطوات التحديث:</b><br>
+      ١. اضغط "تحميل الملف" أدناه<br>
+      ٢. احذف ملف <b>duas-data.js</b> القديم من المجلد<br>
+      ٣. ضع الملف الجديد في نفس المجلد<br>
+      ٤. أعد تحميل التطبيق — التغييرات ستظهر فوراً ✨
+    </div>
+    <div class="export-btns">
+      <button class="btn btn-green" onclick="doExport()">⬇️ تحميل الملف</button>
+      <button class="btn btn-outline" onclick="closeExport()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ DELETE CONFIRM ════ -->
+<div class="confirm-dialog" id="confirm-dialog">
+  <div class="confirm-box">
+    <div class="icon">🗑️</div>
+    <h3>حذف الدعاء</h3>
+    <p id="confirm-msg">هل أنت متأكد من حذف هذا الدعاء؟ لا يمكن التراجع.</p>
+    <div class="confirm-btns">
+      <button class="btn btn-danger" onclick="confirmDelete()">نعم، احذف</button>
+      <button class="btn btn-outline" onclick="closeConfirm()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Load data -->
+<script src="duas-data.js"></script>
+<script>
+
+// ════ STATE ════
+let data = [];
+let editingId = null;
+let deleteTargetId = null;
+let hasUnsaved = false;
+
+const CAT_LABELS = {
+  morning: '☀️ أذكار الصباح',
+  evening: '🌙 أذكار المساء',
+  prayer:  '🕌 أدعية الصلاة',
+  quran:   '📖 أدعية قرآنية',
+  daily:   '🤲 أدعية يومية',
+  protection: '🛡️ أدعية الحفظ والحماية',
+};
+const MOOD_LABELS = {
+  anxious:'😰 متوتر', sad:'😢 حزين', grateful:'🤲 شاكر',
+  sick:'🤒 مريض', rizq:'💰 طالب رزق', guidance:'🌟 طالب هداية', protection:'🛡️ حماية'
+};
+
+// ════ INIT ════
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof DUAS_DATA !== 'undefined') {
+    data = JSON.parse(JSON.stringify(DUAS_DATA)); // deep copy
+    renderTable();
+    renderStats();
+  } else {
+    document.getElementById('table-body').innerHTML =
+      `<tr><td colspan="7"><div class="empty-state"><div>⚠️</div>تعذر تحميل duas-data.js — تأكد أن الملف في نفس المجلد</div></td></tr>`;
+  }
+});
+
+// ════ STATS ════
+function renderStats() {
+  const total = data.length;
+  const counts = {};
+  data.forEach(d => { counts[d.category] = (counts[d.category] || 0) + 1; });
+  let html = `<div class="stat-item"><span class="stat-badge">${total}</span><span class="stat-label">إجمالي الأدعية</span></div>`;
+  Object.entries(counts).forEach(([cat, n]) => {
+    html += `<div class="stat-item"><span class="stat-badge">${n}</span><span class="stat-label">${(CAT_LABELS[cat]||cat)}</span></div>`;
+  });
+  document.getElementById('stats-bar').innerHTML = html;
+}
+
+// ════ TABLE ════
+function renderTable(list) {
+  list = list || filteredList();
+  const tbody = document.getElementById('table-body');
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div>🔍</div>لا توجد نتائج</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(d => `
+    <tr>
+      <td class="td-id">${d.id}</td>
+      <td class="td-title">${d.title}</td>
+      <td class="td-text">${d.text}</td>
+      <td><span class="cat-tag cat-${d.category}">${CAT_LABELS[d.category]||d.category}</span></td>
+      <td>${d.count ? `<span class="count-badge">× ${d.count}</span>` : '<span style="color:var(--text-light);font-size:0.8rem">—</span>'}</td>
+      <td>${(d.moods||[]).map(m => `<span class="mood-pill">${MOOD_LABELS[m]||m}</span>`).join('')}</td>
+      <td>
+        <div class="td-actions">
+          <button class="btn-icon edit" onclick="openDrawer(${d.id})" title="تعديل">✏️</button>
+          <button class="btn-icon" onclick="openConfirm(${d.id})" title="حذف">🗑️</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filteredList() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const cat = document.getElementById('cat-filter').value;
+  return data.filter(d => {
+    const matchCat = !cat || d.category === cat;
+    const matchQ = !q || d.title.includes(q) || d.text.includes(q) || (d.desc||'').includes(q);
+    return matchCat && matchQ;
+  });
+}
+
+function applyFilters() { renderTable(); }
+
+// ════ DRAWER ════
+function openDrawer(id) {
+  editingId = id || null;
+  document.getElementById('drawer-title').textContent = id ? '✏️ تعديل الدعاء' : '➕ إضافة دعاء جديد';
+
+  // Reset form
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-category').value = 'morning';
+  document.getElementById('f-text').value = '';
+  document.getElementById('f-desc').value = '';
+  document.getElementById('f-count-toggle').checked = false;
+  document.getElementById('f-count').value = '';
+  document.getElementById('count-num-wrap').classList.remove('show');
+  document.getElementById('arabic-preview').style.display = 'none';
+  document.getElementById('arabic-preview').textContent = '';
+  document.querySelectorAll('.mood-check').forEach(el => el.classList.remove('checked'));
+
+  if (id) {
+    const d = data.find(x => x.id === id);
+    if (!d) return;
+    document.getElementById('f-title').value = d.title;
+    document.getElementById('f-category').value = d.category;
+    document.getElementById('f-text').value = d.text;
+    document.getElementById('f-desc').value = d.desc || '';
+    if (d.count) {
+      document.getElementById('f-count-toggle').checked = true;
+      document.getElementById('f-count').value = d.count;
+      document.getElementById('count-num-wrap').classList.add('show');
+    }
+    (d.moods || []).forEach(m => {
+      const el = document.querySelector(`.mood-check[data-mood="${m}"]`);
+      if (el) el.classList.add('checked');
+    });
+    updatePreview();
+  }
+
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  setTimeout(() => document.getElementById('f-title').focus(), 300);
+}
+
+function closeDrawer() {
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  editingId = null;
+}
+
+function toggleCount() {
+  const on = document.getElementById('f-count-toggle').checked;
+  document.getElementById('count-num-wrap').classList.toggle('show', on);
+  if (!on) document.getElementById('f-count').value = '';
+}
+
+function toggleMood(el) {
+  // called on click (before state changes via label), so toggle class
+  setTimeout(() => {
+    const checked = el.querySelector('input').checked;
+    el.classList.toggle('checked', !checked); // invert because click fires before checkbox change
+  }, 0);
+}
+
+function updatePreview() {
+  const text = document.getElementById('f-text').value.trim();
+  const preview = document.getElementById('arabic-preview');
+  if (text) {
+    preview.textContent = text;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+function saveDua() {
+  const title    = document.getElementById('f-title').value.trim();
+  const category = document.getElementById('f-category').value;
+  const text     = document.getElementById('f-text').value.trim();
+  const desc     = document.getElementById('f-desc').value.trim();
+  const countOn  = document.getElementById('f-count-toggle').checked;
+  const countVal = parseInt(document.getElementById('f-count').value) || null;
+  const moods    = [...document.querySelectorAll('.mood-check.checked')].map(el => el.dataset.mood);
+
+  if (!title) { showToast('⚠️ يرجى إدخال العنوان', 'error'); document.getElementById('f-title').focus(); return; }
+  if (!text)  { showToast('⚠️ يرجى إدخال نص الدعاء', 'error'); document.getElementById('f-text').focus(); return; }
+  if (countOn && !countVal) { showToast('⚠️ يرجى إدخال عدد التكرار', 'error'); document.getElementById('f-count').focus(); return; }
+
+  if (editingId) {
+    const idx = data.findIndex(d => d.id === editingId);
+    if (idx >= 0) {
+      data[idx] = { ...data[idx], title, category, text, desc, count: countOn ? countVal : null, moods };
+    }
+    showToast('✓ تم تحديث الدعاء', 'success');
+  } else {
+    const newId = data.length ? Math.max(...data.map(d => d.id)) + 1 : 1;
+    data.push({ id: newId, title, category, text, desc, count: countOn ? countVal : null, moods });
+    showToast('✓ تمت إضافة الدعاء', 'success');
+  }
+
+  markUnsaved();
+  renderTable();
+  renderStats();
+  closeDrawer();
+}
+
+// ════ DELETE ════
+function openConfirm(id) {
+  deleteTargetId = id;
+  const d = data.find(x => x.id === id);
+  document.getElementById('confirm-msg').textContent = `هل أنت متأكد من حذف "${d?.title}"؟ لا يمكن التراجع عن هذا الإجراء.`;
+  document.getElementById('confirm-dialog').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-dialog').classList.remove('open');
+  deleteTargetId = null;
+}
+
+function confirmDelete() {
+  data = data.filter(d => d.id !== deleteTargetId);
+  markUnsaved();
+  renderTable();
+  renderStats();
+  closeConfirm();
+  showToast('🗑️ تم حذف الدعاء');
+}
+
+// ════ EXPORT ════
+function openExport() {
+  document.getElementById('export-dialog').classList.add('open');
+}
+function closeExport() {
+  document.getElementById('export-dialog').classList.remove('open');
+}
+
+function doExport() {
+  const comments = `// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ملف بيانات الأدعية والأذكار
+// يمكنك تعديل هذا الملف بحرية لإضافة أو حذف أو تعديل الأدعية
+//
+// الفئات المتاحة (category):
+//   morning    = أذكار الصباح
+//   evening    = أذكار المساء
+//   prayer     = أدعية الصلاة
+//   quran      = أدعية قرآنية
+//   daily      = أدعية يومية
+//   protection = أدعية الحفظ والحماية
+//
+// الحالات المتاحة (moods):
+//   anxious, sad, grateful, sick, rizq, guidance, protection
+//
+// count: عدد التكرار (رقم) أو null إذا لم يكن هناك عداد
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const DUAS_DATA = ${JSON.stringify(data, null, 2)};
+`;
+  const blob = new Blob([comments], { type: 'application/javascript; charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'duas-data.js';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  hasUnsaved = false;
+  document.getElementById('unsaved-dot').classList.remove('show');
+  closeExport();
+  showToast('✓ تم التحميل — ضع الملف في نفس مجلد التطبيق', 'success');
+}
+
+// ════ HELPERS ════
+function markUnsaved() {
+  hasUnsaved = true;
+  document.getElementById('unsaved-dot').classList.add('show');
+}
+
+let toastTimer;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Warn before closing with unsaved changes
+window.addEventListener('beforeunload', e => {
+  if (hasUnsaved) { e.preventDefault(); e.returnValue = ''; }
+});
+
+// ESC to close drawer
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeDrawer();
+    closeConfirm();
+    closeExport();
+  }
+});
+
+</script>
+</body>
+</html>
