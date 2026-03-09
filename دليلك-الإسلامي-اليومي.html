@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دليلك الإسلامي اليومي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark: #1a4731;
+      --green-mid: #2d6a4f;
+      --green-light: #52b788;
+      --gold: #c9a84c;
+      --gold-light: #e9c46a;
+      --bg: #f5f0e8;
+      --bg-card: #ffffff;
+      --bg-pattern: #ede8dc;
+      --text-main: #1a1a1a;
+      --text-sub: #555;
+      --text-light: #888;
+      --border: #e0d9cc;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --font-size: 18px;
+    }
+    body.dark {
+      --bg: #121212;
+      --bg-card: #1e1e1e;
+      --bg-pattern: #181818;
+      --text-main: #f0ede6;
+      --text-sub: #b0a89a;
+      --text-light: #888;
+      --border: #333;
+      --shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ─── Islamic Pattern Background ─── */
+    .pattern-bg {
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(135deg, var(--bg-pattern) 25%, transparent 25%),
+        linear-gradient(225deg, var(--bg-pattern) 25%, transparent 25%),
+        linear-gradient(45deg,  var(--bg-pattern) 25%, transparent 25%),
+        linear-gradient(315deg, var(--bg-pattern) 25%, var(--bg) 25%);
+      background-size: 32px 32px;
+      background-position: 16px 0, 16px 0, 0 0, 0 0;
+    }
+
+    /* ─── Header ─── */
+    header {
+      background: linear-gradient(160deg, #1a4731 0%, #2d6a4f 100%);
+      color: #fff;
+      text-align: center;
+      padding: 20px 16px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      transform: translateY(0);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    header.hidden {
+      transform: translateY(-100%);
+      box-shadow: none;
+    }
+    .basmala {
+      font-family: 'Amiri', serif;
+      font-size: 2.1rem;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      line-height: 1.4;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+      margin: 4px 0 12px;
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .font-row {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+      padding: 4px 12px;
+      gap: 8px;
+    }
+    .font-row button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+    .font-row button:hover { opacity: 1; }
+    .font-row span {
+      color: #fff;
+      font-size: 0.95rem;
+      min-width: 24px;
+      text-align: center;
+    }
+    .font-row .font-T {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      border-right: 1px solid rgba(255,255,255,0.3);
+      padding-right: 10px;
+    }
+    .theme-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ─── Navigation Tabs ─── */
+    nav {
+      background: var(--bg-card);
+      padding: 10px 12px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 110px;
+      z-index: 99;
+      flex-wrap: wrap;
+      transition: top 0.35s ease;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--green-dark);
+      color: #fff;
+      border-color: var(--green-dark);
+    }
+    .tab-btn:hover:not(.active) {
+      border-color: var(--green-mid);
+      color: var(--green-dark);
+    }
+
+    /* ─── Main Content ─── */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 12px 40px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ─── Daily Dua Card ─── */
+    .daily-dua-card {
+      background: linear-gradient(135deg, #fffbf0, #fff8e6);
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    body.dark .daily-dua-card {
+      background: linear-gradient(135deg, #2a2210, #1e1a08);
+      border-color: var(--gold);
+    }
+    .daily-dua-card .section-label {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+    .daily-dua-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.35rem;
+      line-height: 1.9;
+      text-align: center;
+      color: var(--text-main);
+      padding: 12px 0;
+    }
+    .daily-dua-desc {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ─── Section Heading ─── */
+    .section-heading {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .section-heading h2 {
+      font-size: 1.4rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .section-heading p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* ─── Category Filter Pills ─── */
+    .category-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .cat-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-sub);
+      cursor: pointer;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .cat-btn.active {
+      background: var(--green-dark);
+      color: #fff;
+      border-color: var(--green-dark);
+    }
+    .cat-btn:hover:not(.active) {
+      border-color: var(--green-mid);
+    }
+
+    /* ─── Dua Cards ─── */
+    .dua-list { display: flex; flex-direction: column; gap: 16px; }
+    .dua-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.15s;
+    }
+    .dua-card:hover { transform: translateY(-1px); }
+
+    .dua-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .dua-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .dua-icon { font-size: 1.1rem; }
+
+    .dua-text-box {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+    }
+    body.dark .dua-text-box { background: #111; }
+    .dua-text {
+      font-family: 'Amiri', serif;
+      font-size: var(--font-size);
+      line-height: 2;
+      text-align: center;
+      color: var(--text-main);
+      transition: font-size 0.2s;
+    }
+
+    .dua-desc {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    /* ─── Counter ─── */
+    .counter-section { margin-bottom: 12px; }
+    .counter-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      gap: 4px;
+    }
+    .counter-info-nums {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .counter-label { color: var(--text-light); }
+    .counter-nums { color: var(--green-mid); font-weight: 700; }
+    .counter-bar-track {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .counter-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-mid), var(--gold));
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .counter-done {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--green-mid);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .btn-tasbeeh {
+      width: 100%;
+      padding: 12px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: background 0.2s;
+    }
+    .btn-tasbeeh:hover { background: var(--green-mid); }
+    .btn-tasbeeh:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+    .btn-reset {
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--text-light);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-reset:hover {
+      border-color: var(--green-mid);
+      color: var(--green-mid);
+    }
+
+    /* ─── Share Buttons ─── */
+    .share-row {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .btn-share {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.82rem;
+      cursor: pointer;
+      border: 1.5px solid;
+      transition: all 0.2s;
+    }
+    .btn-copy {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-sub);
+    }
+    .btn-copy:hover { border-color: var(--green-mid); color: var(--green-mid); }
+    .btn-whatsapp {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #fff;
+    }
+    .btn-whatsapp:hover { background: var(--green-mid); border-color: var(--green-mid); }
+    .btn-image {
+      background: transparent;
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .btn-image:hover { background: var(--gold); color: #fff; }
+
+    /* ─── Mood Section ─── */
+    .mood-section { text-align: center; }
+    .mood-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .mood-sub {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+    .mood-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .mood-btn {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .mood-btn.active {
+      background: var(--green-dark);
+      color: #fff;
+      border-color: var(--green-dark);
+    }
+    .mood-btn:hover:not(.active) {
+      border-color: var(--green-mid);
+    }
+    .mood-results { text-align: right; }
+    .mood-placeholder {
+      color: var(--text-light);
+      font-size: 1rem;
+      padding: 40px 0;
+    }
+
+    /* ─── Qibla Section ─── */
+    .qibla-section { text-align: center; }
+    .qibla-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .qibla-sub {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 28px;
+    }
+
+    /* Compass */
+    .compass-wrap {
+      display: inline-block;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .compass-outer {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f5f0e8, #e8e0d0);
+      border: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 2px 6px rgba(0,0,0,0.08);
+      position: relative;
+    }
+    body.dark .compass-outer {
+      background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    }
+    .compass-inner {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e8e0d0, #d4c9b0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      position: relative;
+    }
+    body.dark .compass-inner { background: linear-gradient(135deg, #333, #222); }
+
+    .compass-needle {
+      width: 40px;
+      height: 40px;
+      transition: transform 1s cubic-bezier(0.4,0,0.2,1);
+      font-size: 28px;
+    }
+
+    .compass-dir {
+      position: absolute;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Noto Naskh Arabic', serif;
+    }
+    .dir-n { top: 10px; left: 50%; transform: translateX(-50%); }
+    .dir-s { bottom: 10px; left: 50%; transform: translateX(-50%); }
+    .dir-e { right: 10px; top: 50%; transform: translateY(-50%); }
+    .dir-w { left: 10px; top: 50%; transform: translateY(-50%); }
+
+    .qibla-status {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+      min-height: 24px;
+    }
+    .qibla-angle {
+      font-size: 1.1rem;
+      color: var(--green-mid);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    /* City select */
+    .city-select-wrap {
+      margin-bottom: 16px;
+    }
+    .city-select-wrap label {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .city-select {
+      width: 100%;
+      max-width: 280px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.9rem;
+    }
+
+    .btn-locate {
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-locate:hover { background: var(--green-mid); }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--green-dark);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 14px 16px;
+      font-family: 'Amiri', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── Toast ─── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #222;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'Noto Naskh Arabic', serif;
+      z-index: 999;
+      transition: transform 0.3s;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ─── Hidden canvas for image generation ─── */
+    #img-canvas { display: none; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 400px) {
+      .basmala { font-size: 1.6rem; }
+      .share-row { justify-content: center; }
+      .compass-outer { width: 180px; height: 180px; }
+      .compass-inner { width: 80px; height: 80px; }
+    }
+  </style>
+</head>
+<body class="pattern-bg">
+
+<!-- Header -->
+<header>
+  <div class="basmala">بِسْمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>
+  <div class="subtitle">دليلك الإسلامي اليومي</div>
+  <div class="header-controls">
+    <div class="font-row">
+      <button onclick="changeFont(1)" aria-label="تكبير الخط">+</button>
+      <span id="font-display">18</span>
+      <button onclick="changeFont(-1)" aria-label="تصغير الخط">−</button>
+      <button class="font-T" onclick="resetFont()" aria-label="إعادة حجم الخط">T</button>
+    </div>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" aria-label="تبديل الوضع">🌙</button>
+  </div>
+</header>
+
+<!-- Navigation -->
+<nav id="main-nav">
+  <button class="tab-btn active" onclick="switchTab('duas')" id="tab-duas">📖 الأدعية والأذكار</button>
+  <button class="tab-btn" onclick="switchTab('mood')" id="tab-mood">🤲 حسب حالتك</button>
+  <button class="tab-btn" onclick="switchTab('qibla')" id="tab-qibla">🧭 اتجاه القبلة</button>
+</nav>
+
+<main>
+
+  <!-- ═══════════════════ TAB 1: DUAS ═══════════════════ -->
+  <div class="tab-panel active" id="panel-duas">
+
+    <!-- Daily Dua -->
+    <div class="daily-dua-card">
+      <div class="section-label">⭐ دعاء اليوم</div>
+      <div class="daily-dua-text" id="daily-dua-text"></div>
+      <div class="daily-dua-desc" id="daily-dua-desc"></div>
+    </div>
+
+    <!-- Section Heading -->
+    <div class="section-heading">
+      <h2>📖 الأدعية والأذكار</h2>
+      <p>اختر فئة لعرض الأدعية</p>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="category-filter">
+      <button class="cat-btn active" onclick="filterCat('all', this)">🔖 الكل</button>
+      <button class="cat-btn" onclick="filterCat('morning', this)">☀️ أذكار الصباح</button>
+      <button class="cat-btn" onclick="filterCat('evening', this)">🌙 أذكار المساء</button>
+      <button class="cat-btn" onclick="filterCat('prayer', this)">🕌 أدعية الصلاة</button>
+      <button class="cat-btn" onclick="filterCat('quran', this)">📖 أدعية قرآنية</button>
+      <button class="cat-btn" onclick="filterCat('daily', this)">🤲 أدعية يومية</button>
+      <button class="cat-btn" onclick="filterCat('protection', this)">🛡️ أدعية الحفظ والحماية</button>
+    </div>
+
+    <!-- Duas List -->
+    <div class="dua-list" id="duas-list"></div>
+  </div>
+
+  <!-- ═══════════════════ TAB 2: MOOD ═══════════════════ -->
+  <div class="tab-panel" id="panel-mood">
+    <div class="mood-section">
+      <div class="mood-heading">🤲 حسب حالتك</div>
+      <div class="mood-sub">كيف تحس اليوم؟</div>
+      <div class="mood-grid">
+        <button class="mood-btn" onclick="filterMood('anxious', this)">😰 متوتر</button>
+        <button class="mood-btn" onclick="filterMood('sad', this)">😢 حزين</button>
+        <button class="mood-btn" onclick="filterMood('grateful', this)">🤲 شاكر لله</button>
+        <button class="mood-btn" onclick="filterMood('sick', this)">🤒 أبي دعاء شفاء</button>
+        <button class="mood-btn" onclick="filterMood('rizq', this)">💰 أبي دعاء رزق</button>
+        <button class="mood-btn" onclick="filterMood('guidance', this)">🌟 أبي هداية</button>
+        <button class="mood-btn" onclick="filterMood('protection', this)">🛡️ أبي حماية</button>
+      </div>
+      <div class="mood-results dua-list" id="mood-list">
+        <div class="mood-placeholder">اختر حالتك لعرض الأدعية المناسبة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ TAB 3: QIBLA ═══════════════════ -->
+  <div class="tab-panel" id="panel-qibla">
+    <div class="qibla-section">
+      <div class="qibla-heading">🧭 اتجاه القبلة</div>
+      <div class="qibla-sub">حدد موقعك لمعرفة اتجاه القبلة بدقة</div>
+
+      <div class="compass-wrap">
+        <div class="compass-outer">
+          <span class="compass-dir dir-n">شمال</span>
+          <span class="compass-dir dir-s">جنوب</span>
+          <span class="compass-dir dir-e">شرق</span>
+          <span class="compass-dir dir-w">غرب</span>
+          <div class="compass-inner">
+            <div class="compass-needle" id="compass-needle">🧭</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qibla-status" id="qibla-status">اضغط على الزر لتحديد موقعك</div>
+      <div class="qibla-angle" id="qibla-angle"></div>
+
+      <div class="city-select-wrap">
+        <label>أو اختر مدينة من القائمة:</label>
+        <select class="city-select" id="city-select" onchange="selectCity()">
+          <option value="">-- اختر مدينة --</option>
+          <option value="21.4225,39.8262">مكة المكرمة</option>
+          <option value="24.5247,39.5692">المدينة المنورة</option>
+          <option value="24.6877,46.7219">الرياض</option>
+          <option value="21.5433,39.1728">جدة</option>
+          <option value="26.4207,50.0888">الدمام</option>
+          <option value="30.0444,31.2357">القاهرة</option>
+          <option value="25.2048,55.2708">دبي</option>
+          <option value="31.9539,35.9106">عمّان</option>
+          <option value="33.8938,35.5018">بيروت</option>
+          <option value="33.3152,44.3661">بغداد</option>
+          <option value="29.3759,47.9774">الكويت</option>
+          <option value="25.2854,51.5310">الدوحة</option>
+          <option value="41.0082,28.9784">إسطنبول</option>
+          <option value="51.5074,-0.1278">لندن</option>
+          <option value="40.7128,-74.0060">نيويورك</option>
+          <option value="3.1390,101.6869">كوالالمبور</option>
+          <option value="-6.2088,106.8456">جاكرتا</option>
+        </select>
+      </div>
+
+      <button class="btn-locate" onclick="findQibla()">📍 تحديد الموقع</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  اللهم تقبل منا إنك أنت السميع العليم
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Hidden canvas for image export -->
+<canvas id="img-canvas"></canvas>
+
+<script>
+// ═══════════════════ DATA ═══════════════════
+const duas = [
+  // ─── أذكار الصباح ───
+  {
+    id: 1, title: 'دعاء الصباح', category: 'morning',
+    text: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+    desc: 'يُقال في الصباح عند الاستيقاظ', count: null, moods: ['grateful']
+  },
+  {
+    id: 2, title: 'سيد الاستغفار', category: 'morning',
+    text: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+    desc: 'من قالها حين يُمسي فمات من ليلته دخل الجنة، ومن قالها حين يُصبح فمات من يومه دخل الجنة', count: null, moods: ['anxious', 'sad', 'guidance']
+  },
+  {
+    id: 3, title: 'التوكل على الله', category: 'morning',
+    text: 'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',
+    desc: 'من قالها سبع مرات صباحاً ومساءً كفاه الله ما أهمه', count: 7, moods: ['anxious', 'sad']
+  },
+  // ─── أذكار المساء ───
+  {
+    id: 4, title: 'دعاء المساء', category: 'evening',
+    text: 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+    desc: 'يُقال في المساء عند الغروب', count: null, moods: ['grateful']
+  },
+  {
+    id: 5, title: 'دعاء المساء - الحفظ', category: 'evening',
+    text: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ',
+    desc: 'من أذكار المساء الثابتة في السنة النبوية', count: null, moods: ['anxious', 'protection']
+  },
+  {
+    id: 6, title: 'آية الكرسي مساءً', category: 'evening',
+    text: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ',
+    desc: 'من قرأها حين يُمسي أُجير من الشيطان حتى يُصبح', count: null, moods: ['protection', 'anxious']
+  },
+  // ─── أدعية الصلاة ───
+  {
+    id: 7, title: 'دعاء الاستفتاح', category: 'prayer',
+    text: 'سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلَا إِلَهَ غَيْرُكَ',
+    desc: 'يُقال في بداية الصلاة بعد تكبيرة الإحرام', count: null, moods: ['grateful']
+  },
+  {
+    id: 8, title: 'دعاء الركوع', category: 'prayer',
+    text: 'سُبْحَانَ رَبِّيَ الْعَظِيمِ وَبِحَمْدِهِ',
+    desc: 'يُقال في الركوع ثلاث مرات أو أكثر', count: 3, moods: ['grateful']
+  },
+  {
+    id: 9, title: 'دعاء السجود', category: 'prayer',
+    text: 'سُبْحَانَ رَبِّيَ الْأَعْلَى وَبِحَمْدِهِ',
+    desc: 'يُقال في السجود ثلاث مرات — أقرب ما يكون العبد من ربه وهو ساجد', count: 3, moods: ['sad', 'anxious', 'guidance']
+  },
+  // ─── أدعية قرآنية ───
+  {
+    id: 10, title: 'سورة الإخلاص', category: 'quran',
+    text: 'قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ',
+    desc: 'تعادل ثلث القرآن الكريم، من قرأها ثلاث مرات فكأنما قرأ القرآن كله', count: 3, moods: ['grateful', 'protection']
+  },
+  {
+    id: 11, title: 'آية الكرسي', category: 'quran',
+    text: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۚ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ',
+    desc: 'أعظم آية في القرآن الكريم، من قرأها دبر كل صلاة لم يمنعه من دخول الجنة إلا الموت', count: null, moods: ['protection', 'anxious']
+  },
+  {
+    id: 12, title: 'دعاء يونس عليه السلام', category: 'quran',
+    text: 'لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ',
+    desc: 'لا يدعو به مكروب إلا فرّج الله عنه كربه', count: null, moods: ['sad', 'anxious', 'guidance']
+  },
+  // ─── أدعية يومية ───
+  {
+    id: 13, title: 'دعاء الخروج من البيت', category: 'daily',
+    text: 'بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ، لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',
+    desc: 'من قالها حين يخرج قيل له: كُفيت ووُقيت وهُديت، وتنحى عنه الشيطان', count: null, moods: ['protection', 'anxious']
+  },
+  {
+    id: 14, title: 'دعاء دخول البيت', category: 'daily',
+    text: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ الْمَوْلِجِ وَخَيْرَ الْمَخْرَجِ، بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا',
+    desc: 'يُقال عند دخول البيت', count: null, moods: ['protection']
+  },
+  {
+    id: 15, title: 'دعاء الطعام', category: 'daily',
+    text: 'بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ',
+    desc: 'يُقال عند البدء في الأكل أو الشرب', count: null, moods: ['grateful']
+  },
+  {
+    id: 16, title: 'دعاء النوم', category: 'daily',
+    text: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
+    desc: 'يُقال عند النوم', count: null, moods: ['anxious', 'protection']
+  },
+  {
+    id: 17, title: 'دعاء ركوب السيارة', category: 'daily',
+    text: 'سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنقَلِبُونَ',
+    desc: 'يُقال عند ركوب وسيلة النقل', count: null, moods: ['protection', 'grateful']
+  },
+  {
+    id: 18, title: 'دعاء الكرب والضيق', category: 'daily',
+    text: 'لَا إِلَهَ إِلَّا اللَّهُ الْعَظِيمُ الْحَلِيمُ، لَا إِلَهَ إِلَّا اللَّهُ رَبُّ الْعَرْشِ الْعَظِيمِ، لَا إِلَهَ إِلَّا اللَّهُ رَبُّ السَّمَاوَاتِ وَرَبُّ الْأَرْضِ وَرَبُّ الْعَرْشِ الْكَرِيمِ',
+    desc: 'دعاء النبي ﷺ عند الكرب', count: null, moods: ['anxious', 'sad']
+  },
+  // ─── أدعية الحفظ والحماية ───
+  {
+    id: 19, title: 'دعاء الشفاء', category: 'protection',
+    text: 'اللَّهُمَّ رَبَّ النَّاسِ، أَذْهِبِ الْبَأْسَ، اشْفِهِ وَأَنْتَ الشَّافِي، لَا شِفَاءَ إِلَّا شِفَاؤُكَ، شِفَاءً لَا يُغَادِرُ سَقَمًا',
+    desc: 'دعاء الرقية الشرعية للمريض', count: 3, moods: ['sick']
+  },
+  {
+    id: 20, title: 'دعاء طلب الرزق', category: 'protection',
+    text: 'اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ',
+    desc: 'دعاء طلب الرزق الحلال والاستغناء بفضل الله', count: null, moods: ['rizq']
+  },
+  {
+    id: 21, title: 'دعاء الهداية والتوفيق', category: 'protection',
+    text: 'اللَّهُمَّ اهْدِنِي وَسَدِّدْنِي، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالسَّدَادَ',
+    desc: 'دعاء طلب الهداية والتوفيق من الله عز وجل', count: null, moods: ['guidance']
+  },
+  {
+    id: 22, title: 'سورة الفلق - المعوذة', category: 'protection',
+    text: 'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِن شَرِّ مَا خَلَقَ ۝ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ',
+    desc: 'يُقرأ ثلاث مرات صباحاً ومساءً للحفظ والحماية من الشرور والحسد', count: 3, moods: ['protection', 'anxious']
+  }
+];
+
+// Counters state
+const counters = {};
+duas.forEach(d => { if (d.count) counters[d.id] = 0; });
+
+// Font size state
+let fontSize = 18;
+
+// ═══════════════════ RENDER ═══════════════════
+function buildDuaCard(dua, context) {
+  const hasCounter = dua.count !== null;
+  const cur = hasCounter ? (counters[dua.id] || 0) : 0;
+  const done = hasCounter && cur >= dua.count;
+  const pct = hasCounter ? Math.min((cur / dua.count) * 100, 100) : 0;
+
+  return `
+    <div class="dua-card" id="dua-${dua.id}-${context}">
+      <div class="dua-header">
+        <span class="dua-icon">📖</span>
+        <span class="dua-title">${dua.title}</span>
+      </div>
+      <div class="dua-text-box">
+        <div class="dua-text" style="font-size:${fontSize}px">${dua.text}</div>
+      </div>
+      <div class="dua-desc">${dua.desc}</div>
+
+      ${hasCounter ? `
+        <div class="counter-section" id="counter-${dua.id}-${context}">
+          <div class="counter-info">
+            <div class="counter-info-nums">
+              <span class="counter-label">العدد:</span>
+              <span class="counter-nums">${cur} / ${dua.count}</span>
+            </div>
+            <button class="btn-reset" onclick="resetCount(${dua.id}, '${context}')" title="إعادة">↺</button>
+          </div>
+          <div class="counter-bar-track">
+            <div class="counter-bar-fill" style="width:${pct}%"></div>
+          </div>
+          ${done ? `<div class="counter-done">✓ أحسنت! اكتملت الأذكار</div>` : ''}
+          <button class="btn-tasbeeh" ${done ? 'disabled' : ''} onclick="incrementCount(${dua.id}, '${context}')">سبّح</button>
+        </div>
+      ` : ''}
+
+      <div class="share-row">
+        <button class="btn-share btn-copy" onclick="copyDua(${dua.id})">📋 نسخ</button>
+        <button class="btn-share btn-whatsapp" onclick="shareWhatsApp(${dua.id})">📲 واتساب</button>
+        <button class="btn-share btn-image" onclick="downloadImage(${dua.id})">🖼 صوره</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderDuas(list, containerId, context) {
+  const el = document.getElementById(containerId);
+  if (!list.length) {
+    el.innerHTML = '<div class="mood-placeholder">لا توجد أدعية في هذه الفئة</div>';
+    return;
+  }
+  el.innerHTML = list.map(d => buildDuaCard(d, context)).join('');
+  updateFontSizes();
+}
+
+// ═══════════════════ DAILY DUA ═══════════════════
+function setDailyDua() {
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const daily = duas[dayOfYear % duas.length];
+  document.getElementById('daily-dua-text').textContent = daily.text;
+  document.getElementById('daily-dua-desc').textContent = daily.desc;
+}
+
+// ═══════════════════ TAB SWITCHING ═══════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ═══════════════════ CATEGORY FILTER ═══════════════════
+let currentCat = 'all';
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = cat === 'all' ? duas : duas.filter(d => d.category === cat);
+  renderDuas(filtered, 'duas-list', 'main');
+}
+
+// ═══════════════════ MOOD FILTER ═══════════════════
+let currentMood = null;
+function filterMood(mood, btn) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  if (currentMood === mood) {
+    currentMood = null;
+    document.getElementById('mood-list').innerHTML = '<div class="mood-placeholder">اختر حالتك لعرض الأدعية المناسبة</div>';
+    return;
+  }
+  currentMood = mood;
+  btn.classList.add('active');
+  const filtered = duas.filter(d => d.moods.includes(mood));
+  renderDuas(filtered, 'mood-list', 'mood');
+}
+
+// ═══════════════════ COUNTER ═══════════════════
+function incrementCount(id, ctx) {
+  const dua = duas.find(d => d.id === id);
+  if (!dua || counters[id] >= dua.count) return;
+  counters[id]++;
+  refreshCounter(id, ctx, dua);
+}
+
+function resetCount(id, ctx) {
+  counters[id] = 0;
+  const dua = duas.find(d => d.id === id);
+  refreshCounter(id, ctx, dua);
+}
+
+function refreshCounter(id, ctx, dua) {
+  const cur = counters[id];
+  const done = cur >= dua.count;
+  const pct = Math.min((cur / dua.count) * 100, 100);
+  const el = document.getElementById(`counter-${id}-${ctx}`);
+  if (!el) return;
+  el.querySelector('.counter-nums').textContent = `${cur} / ${dua.count}`;
+  el.querySelector('.counter-bar-fill').style.width = pct + '%';
+  const doneEl = el.querySelector('.counter-done');
+  if (done) {
+    if (!doneEl) {
+      const div = document.createElement('div');
+      div.className = 'counter-done';
+      div.textContent = '✓ أحسنت! اكتملت الأذكار';
+      el.querySelector('.counter-bar-track').after(div);
+    }
+    el.querySelector('.btn-tasbeeh').disabled = true;
+  } else {
+    if (doneEl) doneEl.remove();
+    el.querySelector('.btn-tasbeeh').disabled = false;
+  }
+}
+
+// ═══════════════════ SHARE ═══════════════════
+function getDua(id) { return duas.find(d => d.id === id); }
+
+function copyDua(id) {
+  const d = getDua(id);
+  const text = `${d.title}\n\n${d.text}\n\n${d.desc}`;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ تم نسخ الدعاء'));
+}
+
+function shareWhatsApp(id) {
+  const d = getDua(id);
+  const text = encodeURIComponent(`*${d.title}*\n\n${d.text}\n\n_${d.desc}_`);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+function downloadImage(id) {
+  const d = getDua(id);
+  const canvas = document.getElementById('img-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 1080;
+  canvas.height = 1920;
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 1080, 1920);
+  grad.addColorStop(0, '#1a4731');
+  grad.addColorStop(0.5, '#2d6a4f');
+  grad.addColorStop(1, '#1a4731');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // Decorative border
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(40, 40, 1000, 1840);
+  ctx.lineWidth = 2;
+  ctx.strokeRect(60, 60, 960, 1800);
+
+  // Basmala
+  ctx.fillStyle = '#e9c46a';
+  ctx.font = 'bold 72px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', 540, 200);
+
+  // Separator
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(200, 240); ctx.lineTo(880, 240); ctx.stroke();
+
+  // Title
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 64px serif';
+  ctx.fillText(d.title, 540, 360);
+
+  // Dua text
+  ctx.fillStyle = '#e9c46a';
+  ctx.font = '68px serif';
+  const words = d.text.split(' ');
+  let line = '', y = 520, maxW = 900;
+  for (let w of words) {
+    const test = w + ' ' + line;
+    if (ctx.measureText(test).width > maxW && line) {
+      ctx.fillText(line.trim(), 540, y);
+      line = w + ' '; y += 100;
+    } else { line = test; }
+  }
+  if (line) { ctx.fillText(line.trim(), 540, y); y += 100; }
+
+  // Separator
+  ctx.strokeStyle = 'rgba(201,168,76,0.5)';
+  ctx.beginPath(); ctx.moveTo(200, y + 20); ctx.lineTo(880, y + 20); ctx.stroke();
+
+  // Description box
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.roundRect ? ctx.roundRect(80, y+50, 920, 160, 12) : ctx.rect(80, y+50, 920, 160);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.font = '42px serif';
+  const descLines = wrapText(ctx, d.desc, 840);
+  descLines.forEach((ln, i) => ctx.fillText(ln, 540, y + 120 + i * 56));
+
+  // Watermark
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '36px serif';
+  ctx.fillText('دليلك الإسلامي اليومي', 540, 1830);
+
+  const a = document.createElement('a');
+  a.download = `${d.title}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  showToast('✓ جاري التحميل...');
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = []; let line = '';
+  for (let w of words) {
+    const t = w + ' ' + line;
+    if (ctx.measureText(t).width > maxWidth && line) { lines.push(line.trim()); line = w + ' '; }
+    else { line = t; }
+  }
+  if (line) lines.push(line.trim());
+  return lines;
+}
+
+// ═══════════════════ FONT SIZE ═══════════════════
+function changeFont(delta) {
+  fontSize = Math.max(14, Math.min(30, fontSize + delta));
+  document.getElementById('font-display').textContent = fontSize;
+  document.documentElement.style.setProperty('--font-size', fontSize + 'px');
+  updateFontSizes();
+}
+
+function resetFont() {
+  fontSize = 18;
+  document.getElementById('font-display').textContent = 18;
+  document.documentElement.style.setProperty('--font-size', '18px');
+  updateFontSizes();
+}
+
+function updateFontSizes() {
+  document.querySelectorAll('.dua-text').forEach(el => {
+    el.style.fontSize = fontSize + 'px';
+  });
+}
+
+// ═══════════════════ DARK MODE ═══════════════════
+function toggleTheme() {
+  const dark = document.body.classList.toggle('dark');
+  document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+}
+
+// ═══════════════════ QIBLA ═══════════════════
+function calculateQibla(lat, lng) {
+  const mLat = 21.4225 * Math.PI / 180;
+  const mLng = 39.8262 * Math.PI / 180;
+  const uLat = lat * Math.PI / 180;
+  const uLng = lng * Math.PI / 180;
+  const y = Math.sin(mLng - uLng);
+  const x = Math.cos(uLat) * Math.tan(mLat) - Math.sin(uLat) * Math.cos(mLng - uLng);
+  return ((Math.atan2(y, x) * 180 / Math.PI) + 360) % 360;
+}
+
+function setQibla(lat, lng, label) {
+  const angle = calculateQibla(lat, lng);
+  document.getElementById('compass-needle').style.transform = `rotate(${angle}deg)`;
+  document.getElementById('qibla-status').textContent = `📍 ${label}`;
+  document.getElementById('qibla-angle').textContent = `اتجاه القبلة: ${Math.round(angle)}° شمالاً`;
+}
+
+function findQibla() {
+  const status = document.getElementById('qibla-status');
+  if (!navigator.geolocation) {
+    status.textContent = 'المتصفح لا يدعم تحديد الموقع';
+    return;
+  }
+  status.textContent = '⏳ جاري تحديد موقعك...';
+  navigator.geolocation.getCurrentPosition(
+    pos => setQibla(pos.coords.latitude, pos.coords.longitude, 'تم تحديد موقعك'),
+    () => { status.textContent = '⚠️ تعذر الوصول إلى موقعك، اختر مدينة من القائمة'; }
+  );
+}
+
+function selectCity() {
+  const val = document.getElementById('city-select').value;
+  if (!val) return;
+  const [lat, lng] = val.split(',').map(Number);
+  const label = document.getElementById('city-select').options[document.getElementById('city-select').selectedIndex].text;
+  setQibla(lat, lng, label);
+}
+
+// ═══════════════════ TOAST ═══════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ═══════════════════ SCROLL HIDE/SHOW HEADER ═══════════════════
+(function () {
+  let lastY = 0;
+  const THRESHOLD = 8; // px before we react
+  window.addEventListener('scroll', () => {
+    const currentY = window.scrollY;
+    const header = document.querySelector('header');
+    const nav    = document.getElementById('main-nav');
+    const headerH = header.offsetHeight;
+
+    if (currentY <= 10) {
+      // At top — always show header
+      header.classList.remove('hidden');
+      nav.style.top = headerH + 'px';
+    } else if (currentY > lastY + THRESHOLD) {
+      // Scrolling DOWN — hide header, nav jumps to top
+      header.classList.add('hidden');
+      nav.style.top = '0px';
+    } else if (currentY < lastY - THRESHOLD) {
+      // Scrolling UP — show header, nav follows
+      header.classList.remove('hidden');
+      nav.style.top = headerH + 'px';
+    }
+    lastY = currentY;
+  }, { passive: true });
+})();
+
+// ═══════════════════ INIT ═══════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Restore theme
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-btn').textContent = '☀️';
+  }
+  // Set daily dua
+  setDailyDua();
+  // Render all duas
+  renderDuas(duas, 'duas-list', 'main');
+});
+</script>
+</body>
+</html>
