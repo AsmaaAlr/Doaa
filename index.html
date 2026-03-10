@@ -306,6 +306,8 @@
       text-align: center;
       color: var(--text-main);
       transition: font-size 0.2s;
+      white-space: pre-line;
+
     }
 
     .dua-desc {
@@ -316,102 +318,110 @@
       font-style: italic;
     }
 
-    /* ─── Counter ─── */
-    .counter-section { margin-bottom: 12px; }
-    .counter-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.82rem;
-      color: var(--text-sub);
-      margin-bottom: 6px;
-      gap: 4px;
-    }
-    .counter-info-nums {
+    /* ─── Counter (single row) ─── */
+    .counter-section {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
-    .counter-label { color: var(--text-light); }
-    .counter-nums { color: var(--green-mid); font-weight: 700; }
+    .counter-label { color: var(--text-light); font-size: 0.8rem; white-space: nowrap; }
+    .counter-nums  { color: var(--green-mid); font-weight: 700; font-size: 0.82rem; white-space: nowrap; }
     .counter-bar-track {
-      width: 100%;
-      height: 4px;
+      flex: 1;
+      height: 5px;
       background: var(--border);
-      border-radius: 2px;
-      margin-bottom: 10px;
+      border-radius: 3px;
       overflow: hidden;
     }
     .counter-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--green-mid), var(--gold));
-      border-radius: 2px;
+      border-radius: 3px;
       width: 0%;
       transition: width 0.3s;
     }
     .counter-done {
-      text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.78rem;
       color: var(--green-mid);
       font-weight: 700;
-      margin-bottom: 8px;
+      white-space: nowrap;
     }
     .btn-tasbeeh {
-      width: 100%;
-      padding: 12px;
+      flex-shrink: 0;
+      padding: 7px 20px;
       background: var(--green-dark);
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       font-family: 'Noto Naskh Arabic', serif;
-      font-size: 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
-      margin-bottom: 8px;
+      white-space: nowrap;
       transition: background 0.2s;
     }
     .btn-tasbeeh:hover { background: var(--green-mid); }
-    .btn-tasbeeh:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
+    .btn-tasbeeh:disabled { background: #aaa; cursor: not-allowed; }
     .btn-reset {
+      flex-shrink: 0;
       background: none;
       border: 1.5px solid var(--border);
       color: var(--text-light);
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      font-size: 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
       transition: border-color 0.2s, color 0.2s;
     }
-    .btn-reset:hover {
-      border-color: var(--green-mid);
-      color: var(--green-mid);
+    .btn-reset:hover { border-color: var(--green-mid); color: var(--green-mid); }
+
+    /* ─── Action Row (counter + share on one line) ─── */
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .action-row .counter-section {
+      flex: 1;
+      margin-bottom: 0;
+      min-width: 0;
+    }
+    .action-row .share-row {
+      flex-shrink: 0;
+    }
+    /* separator between counter and share */
+    .action-row .share-row::before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+      margin-left: 2px;
     }
 
     /* ─── Share Buttons ─── */
     .share-row {
       display: flex;
-      gap: 8px;
+      align-items: center;
+      gap: 6px;
       justify-content: flex-end;
-      flex-wrap: wrap;
     }
     .btn-share {
       display: flex;
       align-items: center;
-      gap: 5px;
-      padding: 7px 14px;
+      gap: 4px;
+      padding: 6px 11px;
       border-radius: 8px;
       font-family: 'Noto Naskh Arabic', serif;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       cursor: pointer;
       border: 1.5px solid;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     .btn-copy {
       background: transparent;
@@ -640,7 +650,7 @@
 
 <!-- Header -->
 <header>
-  <div class="basmala">بِسْمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>
+  <div class="basmala">﷽</div>
   <div class="subtitle">دليلك الإسلامي اليومي</div>
   <div class="header-controls">
     <div class="font-row">
@@ -679,15 +689,31 @@
     </div>
 
     <!-- Category Filter -->
-    <div class="category-filter">
-      <button class="cat-btn active" onclick="filterCat('all', this)">🔖 الكل</button>
-      <button class="cat-btn" onclick="filterCat('morning', this)">☀️ أذكار الصباح</button>
-      <button class="cat-btn" onclick="filterCat('evening', this)">🌙 أذكار المساء</button>
-      <button class="cat-btn" onclick="filterCat('prayer', this)">🕌 أدعية الصلاة</button>
-      <button class="cat-btn" onclick="filterCat('quran', this)">📖 أدعية قرآنية</button>
-      <button class="cat-btn" onclick="filterCat('daily', this)">🤲 أدعية يومية</button>
-      <button class="cat-btn" onclick="filterCat('protection', this)">🛡️ أدعية الحفظ والحماية</button>
-    </div>
+<div class="category-filter">
+  <button class="cat-btn active" onclick="filterCat('all', this)">🔖 الكل</button>
+  <button class="cat-btn" onclick="filterCat('morning', this)">☀️ أذكار الصباح</button>
+  <button class="cat-btn" onclick="filterCat('evening', this)">🌙 أذكار المساء</button>
+  <button class="cat-btn" onclick="filterCat('after_prayer', this)">🕌 أذكار بعد الصلاة</button>
+  <button class="cat-btn" onclick="filterCat('tasbih', this)">✨ تسابيح</button>
+  <button class="cat-btn" onclick="filterCat('sleep', this)">😴 أذكار النوم</button>
+  <button class="cat-btn" onclick="filterCat('wakeup', this)">🌅 أذكار الاستيقاظ</button>
+  <button class="cat-btn" onclick="filterCat('prayer', this)">🕌 أذكار الصلاة</button>
+  <button class="cat-btn" onclick="filterCat('general_dua', this)">🤲 جوامع الدعاء</button>
+  <button class="cat-btn" onclick="filterCat('prophetic', this)">🕋 أدعية نبوية</button>
+  <button class="cat-btn" onclick="filterCat('quran_dua', this)">📖 الأدعية القرآنية</button>
+  <button class="cat-btn" onclick="filterCat('prophets_dua', this)">🕊️ أدعية الأنبياء</button>
+  <button class="cat-btn" onclick="filterCat('misc', this)">📚 أذكار متفرقة</button>
+  <button class="cat-btn" onclick="filterCat('adhan', this)">📢 أذكار الآذان</button>
+  <button class="cat-btn" onclick="filterCat('mosque', this)">🕌 أذكار المسجد</button>
+  <button class="cat-btn" onclick="filterCat('wudu', this)">💧 أذكار الوضوء</button>
+  <button class="cat-btn" onclick="filterCat('home', this)">🏠 أذكار المنزل</button>
+  <button class="cat-btn" onclick="filterCat('bathroom', this)">🚪 أذكار الخلاء</button>
+  <button class="cat-btn" onclick="filterCat('food', this)">🍽️ أذكار الطعام</button>
+  <button class="cat-btn" onclick="filterCat('hajj', this)">🕋 أذكار الحج والعمرة</button>
+  <button class="cat-btn" onclick="filterCat('quran_khatm', this)">📘 دعاء ختم القرآن الكريم</button>
+  <button class="cat-btn" onclick="filterCat('ruqyah', this)">🛡️ الرقية الشرعية</button>
+  <button class="cat-btn" onclick="filterCat('death', this)">🕯️ أدعية للميت</button>
+</div>
 
     <!-- Duas List -->
     <div class="dua-list" id="duas-list"></div>
@@ -803,27 +829,24 @@ function buildDuaCard(dua, context) {
       </div>
       <div class="dua-desc">${dua.desc}</div>
 
-      ${hasCounter ? `
-        <div class="counter-section" id="counter-${dua.id}-${context}">
-          <div class="counter-info">
-            <div class="counter-info-nums">
-              <span class="counter-label">العدد:</span>
-              <span class="counter-nums">${cur} / ${dua.count}</span>
+      <div class="action-row">
+        ${hasCounter ? `
+          <div class="counter-section" id="counter-${dua.id}-${context}">
+            <button class="btn-tasbeeh" ${done ? 'disabled' : ''} onclick="incrementCount(${dua.id}, '${context}')">عدّ</button>
+            <div class="counter-bar-track">
+              <div class="counter-bar-fill" style="width:${pct}%"></div>
             </div>
+            <span class="counter-label">العدد:</span>
+            <span class="counter-nums">${cur} / ${dua.count}</span>
+            ${done ? `<span class="counter-done">✓ اكتمل</span>` : ''}
             <button class="btn-reset" onclick="resetCount(${dua.id}, '${context}')" title="إعادة">↺</button>
           </div>
-          <div class="counter-bar-track">
-            <div class="counter-bar-fill" style="width:${pct}%"></div>
-          </div>
-          ${done ? `<div class="counter-done">✓ أحسنت! اكتملت الأذكار</div>` : ''}
-          <button class="btn-tasbeeh" ${done ? 'disabled' : ''} onclick="incrementCount(${dua.id}, '${context}')">سبّح</button>
+        ` : '<div style="flex:1"></div>'}
+        <div class="share-row">
+          <button class="btn-share btn-copy" onclick="copyDua(${dua.id})">📋 نسخ</button>
+          <button class="btn-share btn-whatsapp" onclick="shareWhatsApp(${dua.id})">📲 واتساب</button>
+          <button class="btn-share btn-image" onclick="downloadImage(${dua.id})">🖼 صوره</button>
         </div>
-      ` : ''}
-
-      <div class="share-row">
-        <button class="btn-share btn-copy" onclick="copyDua(${dua.id})">📋 نسخ</button>
-        <button class="btn-share btn-whatsapp" onclick="shareWhatsApp(${dua.id})">📲 واتساب</button>
-        <button class="btn-share btn-image" onclick="downloadImage(${dua.id})">🖼 صوره</button>
       </div>
     </div>
   `;
@@ -905,10 +928,10 @@ function refreshCounter(id, ctx, dua) {
   const doneEl = el.querySelector('.counter-done');
   if (done) {
     if (!doneEl) {
-      const div = document.createElement('div');
-      div.className = 'counter-done';
-      div.textContent = '✓ أحسنت! اكتملت الأذكار';
-      el.querySelector('.counter-bar-track').after(div);
+      const span = document.createElement('span');
+      span.className = 'counter-done';
+      span.textContent = '✓ اكتمل';
+      el.querySelector('.btn-reset').before(span);
     }
     el.querySelector('.btn-tasbeeh').disabled = true;
   } else {
