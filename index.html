@@ -413,34 +413,32 @@
     .btn-share {
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 6px 11px;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
       border-radius: 8px;
-      font-family: 'Noto Naskh Arabic', serif;
-      font-size: 0.8rem;
       cursor: pointer;
-      border: 1.5px solid;
+      border: none;
       transition: all 0.2s;
-      white-space: nowrap;
+      flex-shrink: 0;
     }
+    .btn-share svg { display: block; }
     .btn-copy {
-      background: transparent;
-      border-color: var(--border);
+      background: #f1f5f1;
       color: var(--text-sub);
     }
-    .btn-copy:hover { border-color: var(--green-mid); color: var(--green-mid); }
+    .btn-copy:hover { background: #ddeedd; color: var(--green-mid); }
     .btn-whatsapp {
-      background: var(--green-dark);
-      border-color: var(--green-dark);
-      color: #fff;
+      background: #e8f5ee;
+      color: var(--green-dark);
     }
-    .btn-whatsapp:hover { background: var(--green-mid); border-color: var(--green-mid); }
+    .btn-whatsapp:hover { background: #c8e6d4; color: var(--green-dark); }
     .btn-image {
-      background: transparent;
-      border-color: var(--gold);
+      background: #fdf6e3;
       color: var(--gold);
     }
-    .btn-image:hover { background: var(--gold); color: #fff; }
+    .btn-image:hover { background: #fbe9b0; color: #a07820; }
 
     /* ─── Mood Section ─── */
     .mood-section { text-align: center; }
@@ -843,9 +841,15 @@ function buildDuaCard(dua, context) {
           </div>
         ` : '<div style="flex:1"></div>'}
         <div class="share-row">
-          <button class="btn-share btn-copy" onclick="copyDua(${dua.id})">📋 نسخ</button>
-          <button class="btn-share btn-whatsapp" onclick="shareWhatsApp(${dua.id})">📲 واتساب</button>
-          <button class="btn-share btn-image" onclick="downloadImage(${dua.id})">🖼 صوره</button>
+          <button class="btn-share btn-copy" onclick="copyDua(${dua.id})" title="نسخ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button class="btn-share btn-whatsapp" onclick="shareWhatsApp(${dua.id})" title="واتساب">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </button>
+          <button class="btn-share btn-image" onclick="downloadImage(${dua.id})" title="تحميل صورة">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -955,95 +959,214 @@ function shareWhatsApp(id) {
   window.open(`https://wa.me/?text=${text}`, '_blank');
 }
 
-function downloadImage(id) {
-  const d = getDua(id);
-  const canvas = document.getElementById('img-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 1080;
-  canvas.height = 1920;
 
-  // Background gradient
-  const grad = ctx.createLinearGradient(0, 0, 1080, 1920);
-  grad.addColorStop(0, '#1a4731');
-  grad.addColorStop(0.5, '#2d6a4f');
-  grad.addColorStop(1, '#1a4731');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1080, 1920);
-
-  // Decorative border
-  ctx.strokeStyle = '#c9a84c';
-  ctx.lineWidth = 8;
-  ctx.strokeRect(40, 40, 1000, 1840);
-  ctx.lineWidth = 2;
-  ctx.strokeRect(60, 60, 960, 1800);
-
-  // Basmala
-  ctx.fillStyle = '#e9c46a';
-  ctx.font = 'bold 72px serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', 540, 200);
-
-  // Separator
-  ctx.strokeStyle = '#c9a84c';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(200, 240); ctx.lineTo(880, 240); ctx.stroke();
-
-  // Title
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 64px serif';
-  ctx.fillText(d.title, 540, 360);
-
-  // Dua text
-  ctx.fillStyle = '#e9c46a';
-  ctx.font = '68px serif';
-  const words = d.text.split(' ');
-  let line = '', y = 520, maxW = 900;
-  for (let w of words) {
-    const test = w + ' ' + line;
-    if (ctx.measureText(test).width > maxW && line) {
-      ctx.fillText(line.trim(), 540, y);
-      line = w + ' '; y += 100;
-    } else { line = test; }
-  }
-  if (line) { ctx.fillText(line.trim(), 540, y); y += 100; }
-
-  // Separator
-  ctx.strokeStyle = 'rgba(201,168,76,0.5)';
-  ctx.beginPath(); ctx.moveTo(200, y + 20); ctx.lineTo(880, y + 20); ctx.stroke();
-
-  // Description box
-  ctx.fillStyle = 'rgba(255,255,255,0.08)';
-  ctx.roundRect ? ctx.roundRect(80, y+50, 920, 160, 12) : ctx.rect(80, y+50, 920, 160);
-  ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.75)';
-  ctx.font = '42px serif';
-  const descLines = wrapText(ctx, d.desc, 840);
-  descLines.forEach((ln, i) => ctx.fillText(ln, 540, y + 120 + i * 56));
-
-  // Watermark
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '36px serif';
-  ctx.fillText('دليلك الإسلامي اليومي', 540, 1830);
-
-  const a = document.createElement('a');
-  a.download = `${d.title}.png`;
-  a.href = canvas.toDataURL('image/png');
-  a.click();
-  showToast('✓ جاري التحميل...');
+function sanitizeFileName(name) {
+  return (name || 'dua')
+    .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function wrapText(ctx, text, maxWidth) {
-  const words = text.split(' ');
-  const lines = []; let line = '';
-  for (let w of words) {
-    const t = w + ' ' + line;
-    if (ctx.measureText(t).width > maxWidth && line) { lines.push(line.trim()); line = w + ' '; }
-    else { line = t; }
-  }
-  if (line) lines.push(line.trim());
+  if (!text) return [];
+  const paragraphs = String(text).split(/\n+/).map(p => p.trim()).filter(Boolean);
+  const lines = [];
+
+  paragraphs.forEach((paragraph, pIndex) => {
+    const words = paragraph.split(/\s+/);
+    let line = '';
+
+    words.forEach(word => {
+      const testLine = line ? `${line} ${word}` : word;
+      if (ctx.measureText(testLine).width > maxWidth && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = testLine;
+      }
+    });
+
+    if (line) lines.push(line);
+
+    if (pIndex < paragraphs.length - 1) {
+      lines.push('');
+    }
+  });
+
   return lines;
 }
 
+function getTextLayout(ctx, text, maxWidth, fontFamily) {
+  const presets = [
+  { size: 64, lineHeight: 96 },
+  { size: 58, lineHeight: 88 },
+  { size: 52, lineHeight: 80 },
+  { size: 48, lineHeight: 72 },
+  { size: 44, lineHeight: 66 },
+  { size: 40, lineHeight: 60 },
+  { size: 36, lineHeight: 54 }
+];
+
+  for (const preset of presets) {
+    ctx.font = `${preset.size}px ${fontFamily}`;
+    const lines = wrapText(ctx, text, maxWidth);
+    if (lines.length <= 11) {
+      return {
+        fontSize: preset.size,
+        lineHeight: preset.lineHeight,
+        lines
+      };
+    }
+  }
+
+  ctx.font = `42px ${fontFamily}`;
+  return {
+    fontSize: 42,
+    lineHeight: 64,
+    lines: wrapText(ctx, text, maxWidth)
+  };
+}
+
+function drawRoundedRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + w - radius, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+  ctx.lineTo(x + w, y + h - radius);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+  ctx.lineTo(x + radius, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+async function downloadImage(id) {
+  await document.fonts.load('700 86px Amiri');
+  await document.fonts.load('700 62px Amiri');
+  await document.fonts.load('400 74px Amiri');
+  await document.fonts.load('400 50px Amiri');
+  await document.fonts.ready;
+
+  const d = getDua(id);
+  if (!d) return;
+
+  const canvas = document.getElementById('img-canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = 1080;
+  canvas.height = 1920;
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.direction = 'rtl';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  // colors
+  const BG = '#124534';
+  const GOLD = '#d4a843';
+  const TEXT = '#f0e6d0';
+
+  // background
+  ctx.fillStyle = BG;
+  ctx.fillRect(0, 0, W, H);
+
+  // double border
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 8;
+  ctx.strokeRect(34, 34, W - 68, H - 68);
+
+  ctx.lineWidth = 2;
+  ctx.strokeRect(54, 54, W - 108, H - 108);
+
+  // basmala
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 86px Amiri';
+  ctx.fillText('﷽', W / 2, 155);
+
+  // top divider
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(180, 205);
+  ctx.lineTo(W - 180, 205);
+  ctx.stroke();
+
+  // title
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 62px Amiri';
+  ctx.fillText(d.title || 'دعاء', W / 2, 365);
+
+  // text layout
+  const textLayout = getTextLayout(ctx, d.text || '', 860, 'Amiri');
+  const duaLines = textLayout.lines;
+  const duaFontSize = textLayout.fontSize;
+  const duaLineHeight = textLayout.lineHeight;
+
+  ctx.fillStyle = TEXT;
+  ctx.font = `${duaFontSize}px Amiri`;
+
+  const textBlockHeight = duaLines.length * duaLineHeight;
+  const textTop = Math.max(520, 900 - textBlockHeight / 2);
+  let y = textTop;
+
+  duaLines.forEach(line => {
+    if (line === '') {
+      y += Math.round(duaLineHeight * 0.7);
+    } else {
+      ctx.fillText(line, W / 2, y);
+      y += duaLineHeight;
+    }
+  });
+
+  // lower divider
+  //const dividerY = Math.min(y + 45, 1460);
+  //ctx.strokeStyle = 'rgba(212,168,67,0.45)';
+  //ctx.lineWidth = 1.5;
+  //ctx.beginPath();
+  //ctx.moveTo(180, dividerY);
+  //ctx.lineTo(W - 180, dividerY);
+  //ctx.stroke();
+
+  // description box
+  const desc = (d.desc || '').trim();
+  if (desc) {
+    ctx.font = '400 50px Amiri';
+    const descLines = wrapText(ctx, desc, 850);
+    const descLineHeight = 64;
+    const boxHeight = Math.max(140, descLines.length * descLineHeight + 56);
+    const boxY = 1510;
+
+    ctx.fillStyle = 'rgba(240,230,208,0.12)';
+    drawRoundedRect(ctx, 78, boxY, W - 156, boxHeight, 18);
+    ctx.fill();
+
+    ctx.fillStyle = TEXT;
+    ctx.font = '400 50px Amiri';
+
+    let descY = boxY + 68;
+    descLines.forEach(line => {
+      ctx.fillText(line, W / 2, descY);
+      descY += descLineHeight;
+    });
+  }
+
+  // footer
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 34px Amiri';
+  ctx.fillText(' اللهم تقبل منا ', W / 2, 1848);
+
+  const a = document.createElement('a');
+  a.download = `${sanitizeFileName(d.title)}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+
+  showToast('✓ جاري التحميل...');
+}
 // ═══════════════════ FONT SIZE ═══════════════════
 function changeFont(delta) {
   fontSize = Math.max(14, Math.min(30, fontSize + delta));
