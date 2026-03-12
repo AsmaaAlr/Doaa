@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Qibla Finder</title>
+  <sty([developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent?utm_source=chatgpt.com))06121f;
+      --bg2: #10243a;
+      --card: rgba(255,255,255,0.08);
+      --card-border: rgba(255,255,255,0.14);
+      --text: #eef6ff;
+      --muted: #b9c8d8;
+      --gold: #f2c66d;
+      --gold-2: #ffdf9c;
+      --accent: #7dd3fc;
+      --ok: #86efac;
+      --warn: #fdba74;
+      --danger: #fca5a5;
+      --shadow: 0 20px 50px rgba(0,0,0,0.35);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(125,211,252,0.12), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(242,198,109,0.10), transparent 28%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+    }
+
+    .app {
+      width: min(100%, 460px);
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--gold-2);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 6vw, 40px);
+      line-height: 1.05;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .compass-card {
+      padding: 18px 18px 20px;
+    }
+
+    .compass-wrap {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      margin: 6px auto 16px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.07), rgba(255,255,255,0.02) 55%, rgba(255,255,255,0.01) 70%),
+        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+
+    .compass-ring,
+    .qibla-layer,
+    .needle-layer,
+    .center-dot {
+      position: absolute;
+      inset: 0;
+    }
+
+    .compass-ring {
+      transition: transform 180ms linear;
+    }
+
+    .qibla-layer {
+      transition: transform 180ms linear;
+    }
+
+    .compass-face {
+      position: absolute;
+      inset: 6%;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.11);
+    }
+
+    .tick {
+      position: absolute;
+      left: 50%;
+      top: 3.5%;
+      width: 2px;
+      height: 10%;
+      transform-origin: center 420%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.08));
+      border-radius: 999px;
+    }
+
+    .tick.minor {
+      width: 1px;
+      opacity: 0.45;
+      height: 7%;
+    }
+
+    .cardinal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 38px;
+      text-align: center;
+      transform-origin: center center;
+      color: rgba(255,255,255,0.95);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+    }
+
+    .cardinal.n { color: var(--gold-2); }
+
+    .needle {
+      position: absolute;
+      left: 50%;
+      top: 13%;
+      width: 0;
+      height: 37%;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 120px solid rgba(125,211,252,0.13);
+      transform: translateX(-50%);
+      filter: drop-shadow(0 0 14px rgba(125,211,252,0.2));
+    }
+
+    .qibla-arrow {
+      position: absolute;
+      left: 50%;
+      top: 10.5%;
+      width: 0;
+      height: 0;
+      transform: translateX(-50%);
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-bottom: 84px solid var(--gold);
+      filter: drop-shadow(0 0 10px rgba(242,198,109,0.3));
+    }
+
+    .qibla-arrow::after {
+      content: "";
+      position: absolute;
+      left: -6px;
+      top: 76px;
+      width: 12px;
+      height: 34px;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+      border-radius: 0 0 10px 10px;
+    }
+
+    .kaaba-badge {
+      position: absolute;
+      left: 50%;
+      top: 22%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      font-weight: 800;
+      color: #2d220b;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: 0 8px 20px rgba(242,198,109,0.22);
+      white-space: nowrap;
+    }
+
+    .center-dot {
+      inset: auto;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff, #d7e9ff 25%, #7dd3fc 55%, #0f172a 100%);
+      box-shadow: 0 0 0 6px rgba(255,255,255,0.06), 0 0 25px rgba(125,211,252,0.3);
+    }
+
+    .readouts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 12px 14px;
+    }
+
+    .pill .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .pill .value {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .status {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .controls {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      padding: 14px 16px;
+      border-radius: 18px;
+      font-weight: 800;
+      font-size: 15px;
+      transition: transform 0.12s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+
+    button:active { transform: scale(0.985); }
+
+    .primary {
+      color: #1d1606;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+      box-shadow: 0 12px 30px rgba(242,198,109,0.22);
+    }
+
+    .secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .small-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--gold);
+    }
+
+    .fine {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .danger { color: var(--danger); }
+
+    .footer-note {
+      padding: 0 4px 4px;
+      text-align: center;
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="card hero">
+      <div class="eyebrow">🕋 Qibla Finder</div>
+      <h1>Find the direction of the Kaaba on your phone</h1>
+      <p class="sub">Tap start, allow location and compass access, then hold your phone flat for the best result.</p>
+    </section>
+
+    <section class="card compass-card">
+      <div class="compass-wrap" aria-label="Compass">
+        <div class="compass-ring" id="compassRing">
+          <div class="compass-face"></div>
+          <div id="ticks"></div>
+          <div class="cardinal n" style="transform: translate(-50%, -50%) rotate(0deg) translateY(-132px) rotate(0deg);">N</div>
+          <div class="cardinal" style="transform: translate(-50%, -50%) rotate(90deg) translateY(-132px) rotate(-90deg);">E</div>
+          <div class="cardinal" style="transform: translate(-50%, -50%) rotate(180deg) translateY(-132px) rotate(-180deg);">S</div>
+          <div class="cardinal" style="transform: translate(-50%, -50%) rotate(270deg) translateY(-132px) rotate(-270deg);">W</div>
+        </div>
+
+        <div class="needle-layer">
+          <div class="needle"></div>
+        </div>
+
+        <div class="qibla-layer" id="qiblaLayer">
+          <div class="qibla-arrow"></div>
+          <div class="kaaba-badge">Qibla</div>
+        </div>
+
+        <div class="center-dot"></div>
+      </div>
+
+      <div class="readouts">
+        <div class="pill">
+          <div class="label">Qibla bearing</div>
+          <div class="value" id="bearingText">—°</div>
+        </div>
+        <div class="pill">
+          <div class="label">Current heading</div>
+          <div class="value" id="headingText">—°</div>
+        </div>
+        <div class="pill">
+          <div class="label">Turn</div>
+          <div class="value" id="turnText">—</div>
+        </div>
+        <div class="pill">
+          <div class="label">Distance to Makkah</div>
+          <div class="value" id="distanceText">— km</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card controls">
+      <div class="btn-row">
+        <button class="primary" id="startBtn">Start Qibla Finder</button>
+        <button class="secondary" id="locBtn">Refresh Location</button>
+      </div>
+
+      <div class="status" id="statusBox">
+        Ready. This works best on a real phone browser over HTTPS.
+      </div>
+
+      <div class="small-grid">
+        <div>
+          <div style="font-weight:800; margin-bottom:6px;">Compass offset</div>
+          <div class="fine">Use this only if your phone compass looks a little off after calibration.</div>
+        </div>
+        <div id="offsetLabel" style="font-weight:800; min-width:52px; text-align:right;">0°</div>
+      </div>
+      <input type="range" id="offsetSlider" min="-30" max="30" step="1" value="0" />
+
+      <div class="fine">
+        Tips: move your phone in a figure-8 if the compass seems wrong. On some browsers, heading access may be blocked, so the page falls back to showing the Qibla bearing from true north.
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Kaaba coordinates used: 21.4225, 39.8262. For best accuracy, keep location services enabled and avoid magnetic interference.
+    </div>
+  </main>
+
+  <script>
+    const KAABA = { lat: 21.4225, lon: 39.8262 };
+
+    const els = {
+      ticks: document.getElementById('ticks'),
+      compassRing: document.getElementById('compassRing'),
+      qiblaLayer: document.getElementById('qiblaLayer'),
+      bearingText: document.getElementById('bearingText'),
+      headingText: document.getElementById('headingText'),
+      turnText: document.getElementById('turnText'),
+      distanceText: document.getElementById('distanceText'),
+      statusBox: document.getElementById('statusBox'),
+      startBtn: document.getElementById('startBtn'),
+      locBtn: document.getElementById('locBtn'),
+      offsetSlider: document.getElementById('offsetSlider'),
+      offsetLabel: document.getElementById('offsetLabel')
+    };
+
+    let state = {
+      lat: null,
+      lon: null,
+      qiblaBearing: null,
+      heading: null,
+      offset: 0,
+      orientationEnabled: false,
+      locationEnabled: false,
+      usingCompass: false,
+      listenerAttached: false
+    };
+
+    function createTicks() {
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < 36; i++) {
+        const tick = document.createElement('div');
+        tick.className = 'tick' + (i % 3 ? ' minor' : '');
+        tick.style.transform = `translateX(-50%) rotate(${i * 10}deg)`;
+        frag.appendChild(tick);
+      }
+      els.ticks.appendChild(frag);
+    }
+
+    function toRad(deg) { return deg * Math.PI / 180; }
+    function toDeg(rad) { return rad * 180 / Math.PI; }
+    function normalize360(angle) { return (angle % 360 + 360) % 360; }
+
+    function initialBearing(lat1, lon1, lat2, lon2) {
+      const phi1 = toRad(lat1);
+      const phi2 = toRad(lat2);
+      const deltaLon = toRad(lon2 - lon1);
+      const y = Math.sin(deltaLon) * Math.cos(phi2);
+      const x = Math.cos(phi1) * Math.sin(phi2) -
+                Math.sin(phi1) * Math.cos(phi2) * Math.cos(deltaLon);
+      return normalize360(toDeg(Math.atan2(y, x)));
+    }
+
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat/2) ** 2 +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function smallestTurn(fromHeading, toBearing) {
+      let diff = normalize360(toBearing - fromHeading);
+      if (diff > 180) diff -= 360;
+      return diff;
+    }
+
+    function turnText(diff) {
+      const abs = Math.abs(diff);
+      if (abs < 8) return 'You are facing it';
+      if (diff > 0) return `Turn right ${Math.round(abs)}°`;
+      return `Turn left ${Math.round(abs)}°`;
+    }
+
+    function setStatus(msg, tone = '') {
+      els.statusBox.className = 'status';
+      if (tone) els.statusBox.classList.add(tone);
+      els.statusBox.textContent = msg;
+    }
+
+    function render() {
+      if (state.qiblaBearing != null) {
+        els.bearingText.textContent = `${Math.round(state.qiblaBearing)}°`;
+        els.qiblaLayer.style.transform = `rotate(${state.qiblaBearing}deg)`;
+      }
+
+      if (state.heading != null) {
+        const adjustedHeading = normalize360(state.heading + state.offset);
+        els.headingText.textContent = `${Math.round(adjustedHeading)}°`;
+        els.compassRing.style.transform = `rotate(${-adjustedHeading}deg)`;
+
+        if (state.qiblaBearing != null) {
+          const diff = smallestTurn(adjustedHeading, state.qiblaBearing);
+          els.turnText.textContent = turnText(diff);
+        }
+      } else if (state.qiblaBearing != null) {
+        els.headingText.textContent = '—°';
+        els.turnText.textContent = `Face ${Math.round(state.qiblaBearing)}° from N`;
+      }
+
+      if (state.lat != null && state.lon != null) {
+        const km = haversineKm(state.lat, state.lon, KAABA.lat, KAABA.lon);
+        els.distanceText.textContent = `${Math.round(km).toLocaleString()} km`;
+      }
+    }
+
+    function updateFromPosition(position) {
+      state.lat = position.coords.latitude;
+      state.lon = position.coords.longitude;
+      state.locationEnabled = true;
+      state.qiblaBearing = initialBearing(state.lat, state.lon, KAABA.lat, KAABA.lon);
+      render();
+      if (state.usingCompass) {
+        setStatus('Location and compass are active. Hold your phone flat and away from metal for the best reading.', 'ok');
+      } else {
+        setStatus('Location is active. Compass heading is not available yet, so the app is showing the Qibla bearing from true north.', 'warn');
+      }
+    }
+
+    function onLocationError(err) {
+      const map = {
+        1: 'Location permission was denied.',
+        2: 'Location is unavailable right now.',
+        3: 'Location request timed out.'
+      };
+      setStatus((map[err.code] || 'Could not get your location.') + ' Enable location services and try again.', 'danger');
+    }
+
+    function requestLocation() {
+      if (!('geolocation' in navigator)) {
+        setStatus('This browser does not support geolocation.', 'danger');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(updateFromPosition, onLocationError, {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000
+      });
+    }
+
+    function extractHeading(event) {
+      if (typeof event.webkitCompassHeading === 'number' && !Number.isNaN(event.webkitCompassHeading)) {
+        return normalize360(event.webkitCompassHeading);
+      }
+
+      if (typeof event.alpha === 'number' && !Number.isNaN(event.alpha)) {
+        return normalize360(360 - event.alpha);
+      }
+
+      return null;
+    }
+
+    function handleOrientation(event) {
+      const heading = extractHeading(event);
+      if (heading == null) return;
+      state.heading = heading;
+      state.usingCompass = true;
+      render();
+
+      if (state.locationEnabled) {
+        setStatus('Live compass active. Move the phone in a figure-8 if the heading looks off.', 'ok');
+      } else {
+        setStatus('Compass active. Now allow location to calculate your Qibla direction.', 'warn');
+      }
+    }
+
+    function attachOrientationListener() {
+      if (state.listenerAttached) return;
+      window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+      window.addEventListener('deviceorientation', handleOrientation, true);
+      state.listenerAttached = true;
+    }
+
+    async function requestOrientationAccess() {
+      if (!window.isSecureContext) {
+        setStatus('This page must be opened over HTTPS to access compass and location on phones.', 'danger');
+        return false;
+      }
+
+      try {
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          const result = await DeviceOrientationEvent.requestPermission();
+          if (result !== 'granted') {
+            setStatus('Compass permission was not granted. The page can still show the Qibla bearing from north.', 'warn');
+            return false;
+          }
+        }
+        attachOrientationListener();
+        state.orientationEnabled = true;
+        return true;
+      } catch (error) {
+        setStatus('Could not start compass access on this browser. You can still use the bearing readout.', 'warn');
+        return false;
+      }
+    }
+
+    async function startAll() {
+      await requestOrientationAccess();
+      requestLocation();
+    }
+
+    els.startBtn.addEventListener('click', startAll);
+    els.locBtn.addEventListener('click', requestLocation);
+    els.offsetSlider.addEventListener('input', (e) => {
+      state.offset = Number(e.target.value || 0);
+      els.offsetLabel.textContent = `${state.offset > 0 ? '+' : ''}${state.offset}°`;
+      render();
+    });
+
+    createTicks();
+    render();
+  </script>
+</body>
+</html>
