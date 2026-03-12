@@ -124,7 +124,8 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       border-right: 1px solid rgba(255,255,255,0.3);
       padding-right: 10px;
     }
-    .theme-btn {
+    .theme-btn,
+    .search-toggle-btn {
       background: rgba(255,255,255,0.15);
       border: none;
       color: #fff;
@@ -138,7 +139,38 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       justify-content: center;
       transition: background 0.2s;
     }
-    .theme-btn:hover { background: rgba(255,255,255,0.25); }
+    .theme-btn:hover,
+    .search-toggle-btn:hover,
+    .search-toggle-btn.active {
+      background: rgba(255,255,255,0.25);
+    }
+    .header-search-panel {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .header-search-panel[hidden] {
+      display: none !important;
+    }
+    .header-search-input {
+      width: min(100%, 560px);
+      padding: 12px 16px;
+      border: 1.5px solid rgba(255,255,255,0.24);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.95rem;
+      backdrop-filter: blur(8px);
+    }
+    .header-search-input::placeholder {
+      color: rgba(255,255,255,0.72);
+    }
+    .header-search-input:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.18);
+    }
 
     /* ─── Navigation Tabs ─── */
     nav {
@@ -192,6 +224,8 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       padding: 20px;
       margin-bottom: 24px;
       box-shadow: var(--shadow);
+  	display: none;
+
     }
     body.dark .daily-dua-card {
       background: linear-gradient(135deg, #2a2210, #1e1a08);
@@ -237,13 +271,35 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       color: var(--text-light);
     }
 
-    /* ─── Category Filter Pills ─── */
+    /* ─── Category Browser ─── */
     .category-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .level-tabs,
+    .sublevel-tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       justify-content: center;
-      margin-bottom: 20px;
+    }
+    .sublevel-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .sublevel-wrap[hidden] {
+      display: none !important;
+    }
+    .sublevel-title {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
     }
     .cat-btn {
       padding: 6px 14px;
@@ -256,6 +312,10 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       font-size: 0.82rem;
       transition: all 0.2s;
       white-space: nowrap;
+    }
+    .level2-btn {
+      font-weight: 700;
+      padding: 8px 16px;
     }
     .cat-btn.active {
       background: var(--green-dark);
@@ -657,7 +717,17 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       <button onclick="changeFont(-1)" aria-label="تصغير الخط">−</button>
       <button class="font-T" onclick="resetFont()" aria-label="إعادة حجم الخط">T</button>
     </div>
+    <button class="search-toggle-btn" id="search-toggle-btn" onclick="toggleSearch()" aria-label="فتح البحث">🔎</button>
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" aria-label="تبديل الوضع">🌙</button>
+  </div>
+  <div class="header-search-panel" id="header-search-panel" hidden>
+    <input
+      id="dua-search"
+      class="header-search-input"
+      type="search"
+      placeholder="ابحث في جميع الأدعية والأذكار..."
+      oninput="handleSearchInput(this.value)"
+    >
   </div>
 </header>
 
@@ -678,39 +748,21 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       <div class="section-label">⭐ دعاء اليوم</div>
       <div class="daily-dua-text" id="daily-dua-text"></div>
       <div class="daily-dua-desc" id="daily-dua-desc"></div>
-    </div>
+    </div> 
 
     <!-- Section Heading -->
     <div class="section-heading">
       <h2>📖 الأدعية والأذكار</h2>
-      <p>اختر فئة لعرض الأدعية</p>
+      
     </div>
 
-    <!-- Category Filter -->
+    <!-- Category Browser -->
 <div class="category-filter">
-  <button class="cat-btn active" onclick="filterCat('all', this)">🔖 الكل</button>
-  <button class="cat-btn" onclick="filterCat('morning', this)">☀️ أذكار الصباح</button>
-  <button class="cat-btn" onclick="filterCat('evening', this)">🌙 أذكار المساء</button>
-  <button class="cat-btn" onclick="filterCat('after_prayer', this)">🕌 أذكار بعد الصلاة</button>
-  <button class="cat-btn" onclick="filterCat('tasbih', this)">✨ تسابيح</button>
-  <button class="cat-btn" onclick="filterCat('sleep', this)">😴 أذكار النوم</button>
-  <button class="cat-btn" onclick="filterCat('wakeup', this)">🌅 أذكار الاستيقاظ</button>
-  <button class="cat-btn" onclick="filterCat('prayer', this)">🕌 أذكار الصلاة</button>
-  <button class="cat-btn" onclick="filterCat('general_dua', this)">🤲 جوامع الدعاء</button>
-  <button class="cat-btn" onclick="filterCat('prophetic', this)">🕋 أدعية نبوية</button>
-  <button class="cat-btn" onclick="filterCat('quran_dua', this)">📖 الأدعية القرآنية</button>
-  <button class="cat-btn" onclick="filterCat('prophets_dua', this)">🕊️ أدعية الأنبياء</button>
-  <button class="cat-btn" onclick="filterCat('misc', this)">📚 أذكار متفرقة</button>
-  <button class="cat-btn" onclick="filterCat('adhan', this)">📢 أذكار الآذان</button>
-  <button class="cat-btn" onclick="filterCat('mosque', this)">🕌 أذكار المسجد</button>
-  <button class="cat-btn" onclick="filterCat('wudu', this)">💧 أذكار الوضوء</button>
-  <button class="cat-btn" onclick="filterCat('home', this)">🏠 أذكار المنزل</button>
-  <button class="cat-btn" onclick="filterCat('bathroom', this)">🚪 أذكار الخلاء</button>
-  <button class="cat-btn" onclick="filterCat('food', this)">🍽️ أذكار الطعام</button>
-  <button class="cat-btn" onclick="filterCat('hajj', this)">🕋 أذكار الحج والعمرة</button>
-  <button class="cat-btn" onclick="filterCat('quran_khatm', this)">📘 دعاء ختم القرآن الكريم</button>
-  <button class="cat-btn" onclick="filterCat('ruqyah', this)">🛡️ الرقية الشرعية</button>
-  <button class="cat-btn" onclick="filterCat('death', this)">🕯️ أدعية للميت</button>
+  <div class="level-tabs" id="level2-tabs"></div>
+  <div class="sublevel-wrap" id="level3-wrap" hidden>
+    <div class="sublevel-title" id="level3-title"></div>
+    <div class="sublevel-tabs" id="level3-tabs"></div>
+  </div>
 </div>
 
     <!-- Duas List -->
@@ -808,6 +860,70 @@ const counters = {};
 
 // Font size state
 let fontSize = 18;
+let currentTab = 'duas';
+let currentGroup = 'all';
+let currentSub = 'all';
+let currentSearch = '';
+let searchOpen = false;
+
+const CATEGORY_GROUPS = [
+  { id: 'all', label: '🔖 الكل', categories: [] },
+  { id: 'morning', label: '☀️ أذكار الصباح', categories: ['morning'] },
+  {
+    id: 'night',
+    label: '🌙 المساء والنوم',
+    title: 'المساء والنوم',
+    categories: ['evening', 'sleep', 'wakeup'],
+    subs: [
+      { id: 'evening', label: '🌙 أذكار المساء' },
+      { id: 'sleep', label: '😴 أذكار النوم' },
+      { id: 'wakeup', label: '🌅 أذكار الاستيقاظ' }
+    ]
+  },
+  { id: 'tasbih', label: '✨ تسابيح', categories: ['tasbih'] },
+  { id: 'istighfar', label: '✨ استغفار', categories: ['istighfar'] },
+  { id: 'ruqyah', label: '🛡️ الرقية الشرعية', categories: ['ruqyah'] },
+  {
+    id: 'prayer_related',
+    label: '🕌 الأذكار المتعلقة بالصلاة',
+    title: 'الأذكار المتعلقة بالصلاة',
+    categories: ['adhan', 'wudu', 'mosque', 'prayer', 'after_prayer'],
+    subs: [
+      { id: 'adhan', label: '📢 أذكار الآذان' },
+      { id: 'wudu', label: '💧 أذكار الوضوء' },
+      { id: 'mosque', label: '🕌 أذكار المسجد' },
+      { id: 'prayer', label: '🕌 أذكار الصلاة' },
+      { id: 'after_prayer', label: '🕌 أذكار بعد الصلاة' }
+    ]
+  },
+  {
+    id: 'misc',
+    label: '📚 أذكار متفرقة',
+    title: 'متفرقات',
+    categories: ['misc', 'death', 'bathroom', 'food', 'home', 'hajj', 'quran_khatm'],
+    subs: [
+      { id: 'misc', label: '📚 أذكار متفرقة' },
+      { id: 'death', label: '🕯️ أدعية للميت' },
+      { id: 'bathroom', label: '🚪 أذكار الخلاء' },
+      { id: 'food', label: '🍽️ أذكار الطعام' },
+      { id: 'home', label: '🏠 أذكار المنزل' },
+      { id: 'hajj', label: '🕋 أذكار الحج والعمرة' },
+      { id: 'quran_khatm', label: '📘 دعاء ختم القرآن الكريم' }
+    ]
+  },
+  {
+    id: 'general_dua',
+    label: '🤲 جوامع الدعاء',
+    title: 'جوامع الدعاء',
+    categories: ['general_dua', 'prophetic', 'quran_dua', 'prophets_dua'],
+    subs: [
+      { id: 'general_dua', label: '🤲 جوامع الدعاء' },
+      { id: 'prophetic', label: '🕋 أدعية نبوية' },
+      { id: 'quran_dua', label: '📖 الأدعية القرآنية' },
+      { id: 'prophets_dua', label: '🕊️ أدعية الأنبياء' }
+    ]
+  }
+];
 
 // ═══════════════════ RENDER ═══════════════════
 function buildDuaCard(dua, context) {
@@ -859,7 +975,7 @@ function buildDuaCard(dua, context) {
 function renderDuas(list, containerId, context) {
   const el = document.getElementById(containerId);
   if (!list.length) {
-    el.innerHTML = '<div class="mood-placeholder">لا توجد أدعية في هذه الفئة</div>';
+    el.innerHTML = '<div class="mood-placeholder">لا توجد نتائج مطابقة حالياً</div>';
     return;
   }
   el.innerHTML = list.map(d => buildDuaCard(d, context)).join('');
@@ -875,21 +991,201 @@ function setDailyDua() {
 }
 
 // ═══════════════════ TAB SWITCHING ═══════════════════
-function switchTab(tab) {
+function switchTab(tab, options = {}) {
+  currentTab = tab;
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + tab).classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
+  if (options.updateHash !== false) updateHash();
 }
 
 // ═══════════════════ CATEGORY FILTER ═══════════════════
-let currentCat = 'all';
-function filterCat(cat, btn) {
-  currentCat = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const filtered = cat === 'all' ? duas : duas.filter(d => d.category === cat);
-  renderDuas(filtered, 'duas-list', 'main');
+function getGroupConfig(groupId) {
+  return CATEGORY_GROUPS.find(group => group.id === groupId) || CATEGORY_GROUPS[0];
+}
+
+function getDuaCategories(dua) {
+  const raw = dua.categories ?? dua.category ?? [];
+  if (Array.isArray(raw)) return raw;
+  return raw ? [raw] : [];
+}
+
+function normalizeArabicText(text) {
+  return String(text || '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function matchesSearch(dua, term) {
+  if (!term) return true;
+  const haystack = normalizeArabicText([
+    dua.title,
+    dua.text,
+    dua.desc,
+    ...getDuaCategories(dua)
+  ].join(' '));
+  return haystack.includes(term);
+}
+
+function matchesAnyCategory(dua, categories) {
+  if (!categories || !categories.length) return true;
+  const duaCategories = getDuaCategories(dua);
+  return categories.some(category => duaCategories.includes(category));
+}
+
+function getActiveCategories() {
+  if (currentSearch.trim()) return [];
+  if (currentGroup === 'all') return [];
+  if (currentSub !== 'all') return [currentSub];
+  return getGroupConfig(currentGroup).categories || [];
+}
+
+function getFilteredDuas() {
+  const term = normalizeArabicText(currentSearch);
+  if (term) {
+    return duas.filter(dua => matchesSearch(dua, term));
+  }
+  const activeCategories = getActiveCategories();
+  return duas.filter(dua => matchesAnyCategory(dua, activeCategories));
+}
+
+function renderMainDuas() {
+  renderDuas(getFilteredDuas(), 'duas-list', 'main');
+}
+
+function renderLevel2Tabs() {
+  const container = document.getElementById('level2-tabs');
+  if (!container) return;
+  container.innerHTML = CATEGORY_GROUPS.map(group => `
+    <button class="cat-btn level2-btn ${group.id === currentGroup ? 'active' : ''}" onclick="selectGroup('${group.id}')">${group.label}</button>
+  `).join('');
+}
+
+function renderLevel3Tabs() {
+  const wrap = document.getElementById('level3-wrap');
+  const title = document.getElementById('level3-title');
+  const container = document.getElementById('level3-tabs');
+  if (!wrap || !title || !container) return;
+
+  const group = getGroupConfig(currentGroup);
+  if (!group.subs || !group.subs.length) {
+    wrap.hidden = true;
+    title.textContent = '';
+    container.innerHTML = '';
+    return;
+  }
+
+  wrap.hidden = false;
+  <!-- title.textContent = `التفريع داخل ${group.title || group.label}`;  -->
+  const subItems = [{ id: 'all', label: '🔖 الكل' }, ...group.subs];
+  container.innerHTML = subItems.map(item => `
+    <button class="cat-btn ${item.id === currentSub ? 'active' : ''}" onclick="selectSub('${item.id}')">${item.label}</button>
+  `).join('');
+}
+
+function selectGroup(groupId, options = {}) {
+  currentGroup = getGroupConfig(groupId).id;
+  currentSub = 'all';
+  renderLevel2Tabs();
+  renderLevel3Tabs();
+  renderMainDuas();
+  if (options.updateHash !== false) updateHash();
+}
+
+function selectSub(subId, options = {}) {
+  currentSub = subId;
+  renderLevel3Tabs();
+  renderMainDuas();
+  if (options.updateHash !== false) updateHash();
+}
+
+function updateSearchUI() {
+  const panel = document.getElementById('header-search-panel');
+  const button = document.getElementById('search-toggle-btn');
+  if (panel) panel.hidden = !searchOpen;
+  if (button) button.classList.toggle('active', searchOpen || !!currentSearch.trim());
+}
+
+function toggleSearch(forceOpen) {
+  if (typeof forceOpen === 'boolean') {
+    searchOpen = forceOpen;
+  } else {
+    searchOpen = !searchOpen;
+  }
+
+  if (!searchOpen && currentSearch.trim()) {
+    currentSearch = '';
+    const searchEl = document.getElementById('dua-search');
+    if (searchEl) searchEl.value = '';
+    renderMainDuas();
+  }
+
+  updateSearchUI();
+  if (searchOpen) {
+    const searchEl = document.getElementById('dua-search');
+    if (searchEl) searchEl.focus();
+  }
+  updateHash();
+}
+
+function handleSearchInput(value) {
+  currentSearch = value;
+  if (currentSearch.trim()) {
+    searchOpen = true;
+    if (currentTab !== 'duas') switchTab('duas', { updateHash: false });
+  }
+  updateSearchUI();
+  renderMainDuas();
+  updateHash();
+}
+
+function readHashState() {
+  const hash = window.location.hash.replace(/^#/, '');
+  const params = new URLSearchParams(hash);
+  return {
+    tab: params.get('tab') || 'duas',
+    group: params.get('group') || 'all',
+    sub: params.get('sub') || 'all',
+    q: params.get('q') || '',
+    search: params.get('search') || '0'
+  };
+}
+
+function updateHash() {
+  const params = new URLSearchParams();
+  if (currentTab !== 'duas') params.set('tab', currentTab);
+  if (currentGroup !== 'all') params.set('group', currentGroup);
+  if (currentSub !== 'all') params.set('sub', currentSub);
+  if (currentSearch.trim()) params.set('q', currentSearch.trim());
+  if (searchOpen && !currentSearch.trim()) params.set('search', '1');
+  const hash = params.toString();
+  const url = hash ? ('#' + hash) : (window.location.pathname + window.location.search);
+  history.replaceState(null, '', url);
+}
+
+function applyHashState() {
+  const state = readHashState();
+  const safeTab = document.getElementById('panel-' + state.tab) ? state.tab : 'duas';
+  const group = getGroupConfig(state.group);
+  const safeSub = (group.subs || []).some(item => item.id === state.sub) ? state.sub : 'all';
+
+  currentGroup = group.id;
+  currentSub = safeSub;
+  currentSearch = state.q;
+  searchOpen = state.search === '1' || !!state.q;
+
+  const searchEl = document.getElementById('dua-search');
+  if (searchEl) searchEl.value = currentSearch;
+
+  switchTab(safeTab, { updateHash: false });
+  updateSearchUI();
+  renderLevel2Tabs();
+  renderLevel3Tabs();
+  renderMainDuas();
 }
 
 // ═══════════════════ MOOD FILTER ═══════════════════
@@ -1283,7 +1579,8 @@ document.addEventListener('DOMContentLoaded', () => {
     duas = DUAS_DATA;
     duas.forEach(d => { if (d.count) counters[d.id] = 0; });
     setDailyDua();
-    renderDuas(duas, 'duas-list', 'main');
+    applyHashState();
+    window.addEventListener('hashchange', applyHashState);
   } else {
     document.getElementById('duas-list').innerHTML =
       '<div class="mood-placeholder">⚠️ تعذر تحميل البيانات. تأكد من وجود ملف duas-data.js في نفس المجلد.</div>';
@@ -1292,3 +1589,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
+
