@@ -427,27 +427,38 @@
       statusBox.textContent = text;
     }
 
-    function render(){
-      if(qiblaBearing != null){
+    function render() {
+      if (qiblaBearing != null) {
         bearingText.textContent = Math.round(qiblaBearing) + '°';
-        qiblaArrowWrap.style.transform = `rotate(${qiblaBearing}deg)`;
       }
-  
-      if(heading != null){
+    
+      if (heading != null && qiblaBearing != null) {
         headingText.textContent = Math.round(heading) + '°';
+    
+        // rotate compass letters/ring with phone
         ring.style.transform = `rotate(${-heading}deg)`;
-  
-        if(qiblaBearing != null){
-          directionText.textContent = getTurnText(heading, qiblaBearing);
-          subDirectionText.textContent = 'لفّي الجوال لين يصير سهم القبلة بالأعلى';
-        }
-      } else if(qiblaBearing != null){
+    
+        // rotate qibla marker relative to current phone heading
+        const relative = norm(qiblaBearing - heading);
+        qiblaArrowWrap.style.transform = `rotate(${relative}deg)`;
+    
+        directionText.textContent = getTurnText(heading, qiblaBearing);
+        subDirectionText.textContent = 'لفّي الجوال لين يصير سهم القبلة فوق';
+      }
+      else if (qiblaBearing != null) {
         headingText.textContent = '—°';
+    
+        // no live compass, just show absolute direction
         ring.style.transform = `rotate(0deg)`;
+        qiblaArrowWrap.style.transform = `rotate(${qiblaBearing}deg)`;
+    
         directionText.textContent = 'هذا هو اتجاه القبلة';
         subDirectionText.textContent = 'إذا ما اشتغلت البوصلة، اتبعي السهم بالنسبة للشمال';
       }
     }
+
+
+    
 
 
     function onOrientation(event){
