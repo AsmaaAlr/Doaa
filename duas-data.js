@@ -1713,6 +1713,16 @@ const DUAS_DATA = [
     "source": "",
     "count": null,
     "moods": [""]
+  },
+  {
+    "id": 164,
+    "title": "إذا سمع الرعد يقول",
+    "category": "",
+    "text": "سبحان من سبح الرعد بحمده والملائكة من خيفته",
+    "desc": "",
+    "source": "",
+    "count": null,
+    "moods": [""]
   }
 
 ];
