@@ -430,18 +430,31 @@
     function render(){
       if(qiblaBearing != null){
         bearingText.textContent = Math.round(qiblaBearing) + '°';
-        qiblaArrowWrap.style.transform = `rotate(${qiblaBearing}deg)`;
       }
-
-      if(heading != null){
+  
+      if(heading != null && qiblaBearing != null){
         headingText.textContent = Math.round(heading) + '°';
-        ring.style.transform = `rotate(${-heading}deg)`;
+  
+        // difference between where phone faces and where qibla is
+        const relativeQibla = norm(qiblaBearing - heading);
+  
+        // keep compass background fixed
+        ring.style.transform = `rotate(0deg)`;
+  
+        // move qibla arrow as phone moves
+        qiblaArrowWrap.style.transform = `rotate(${relativeQibla}deg)`;
+  
         directionText.textContent = getTurnText(heading, qiblaBearing);
-        subDirectionText.textContent = 'السهم الذهبي هو اتجاه القبلة';
-      } else if(qiblaBearing != null) {
+        subDirectionText.textContent = 'لفّي الجوال لين يصير السهم للأعلى';
+      } 
+      else if(qiblaBearing != null) {
         headingText.textContent = '—°';
+  
+        // if no compass, just show absolute qibla direction
+        qiblaArrowWrap.style.transform = `rotate(${qiblaBearing}deg)`;
+  
         directionText.textContent = 'هذا هو اتجاه القبلة';
-        subDirectionText.textContent = 'إذا ما اشتغلت البوصلة، اتبعي السهم الذهبي بالنسبة للشمال';
+        subDirectionText.textContent = 'إذا ما اشتغلت البوصلة، اتبعي السهم بالنسبة للشمال';
       }
     }
 
