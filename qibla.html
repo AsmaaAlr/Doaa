@@ -430,33 +430,25 @@
     function render(){
       if(qiblaBearing != null){
         bearingText.textContent = Math.round(qiblaBearing) + '°';
+        qiblaArrowWrap.style.transform = `rotate(${qiblaBearing}deg)`;
       }
   
-      if(heading != null && qiblaBearing != null){
+      if(heading != null){
         headingText.textContent = Math.round(heading) + '°';
+        ring.style.transform = `rotate(${-heading}deg)`;
   
-        // difference between where phone faces and where qibla is
-        const relativeQibla = norm(qiblaBearing - heading);
-  
-        // keep compass background fixed
-        ring.style.transform = `rotate(0deg)`;
-  
-        // move qibla arrow as phone moves
-        qiblaArrowWrap.style.transform = `rotate(${relativeQibla}deg)`;
-  
-        directionText.textContent = getTurnText(heading, qiblaBearing);
-        subDirectionText.textContent = 'لفّي الجوال لين يصير السهم للأعلى';
-      } 
-      else if(qiblaBearing != null) {
+        if(qiblaBearing != null){
+          directionText.textContent = getTurnText(heading, qiblaBearing);
+          subDirectionText.textContent = 'لفّي الجوال لين يصير سهم القبلة بالأعلى';
+        }
+      } else if(qiblaBearing != null){
         headingText.textContent = '—°';
-  
-        // if no compass, just show absolute qibla direction
-        qiblaArrowWrap.style.transform = `rotate(${qiblaBearing}deg)`;
-  
+        ring.style.transform = `rotate(0deg)`;
         directionText.textContent = 'هذا هو اتجاه القبلة';
         subDirectionText.textContent = 'إذا ما اشتغلت البوصلة، اتبعي السهم بالنسبة للشمال';
       }
     }
+
 
     function onOrientation(event){
       const h = getHeading(event);
