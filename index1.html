@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دليلك الإسلامي اليومي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+  --green-dark: #5A1F2B;
+  --green-mid: #7B2E3B;
+  --green-light: #B46A75;
+  --gold: #D9B15F;
+  --gold-light: #E9C983;
+  --bg: #FBF4EC;
+  --bg-card: #FFFFFF;
+  --bg-pattern: #F0E5D9;
+  --text-main: #1E1A1A;
+  --text-sub: #5F5656;
+  --text-light: #8B7F7F;
+  --border: #E3D4C7;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --font-size: 18px;
+    }
+    body.dark {
+      --bg: #121212;
+      --bg-card: #1e1e1e;
+      --bg-pattern: #181818;
+      --text-main: #f0ede6;
+      --text-sub: #b0a89a;
+      --text-light: #888;
+      --border: #333;
+      --shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ─── Islamic Pattern Background ─── */
+    .pattern-bg {
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(135deg, var(--bg-pattern) 25%, transparent 25%),
+        linear-gradient(225deg, var(--bg-pattern) 25%, transparent 25%),
+        linear-gradient(45deg,  var(--bg-pattern) 25%, transparent 25%),
+        linear-gradient(315deg, var(--bg-pattern) 25%, var(--bg) 25%);
+      background-size: 32px 32px;
+      background-position: 16px 0, 16px 0, 0 0, 0 0;
+    }
+
+    /* ─── Header ─── */
+    header {
+background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
+      color: #fff;
+      text-align: center;
+      padding: 20px 16px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      transform: translateY(0);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    header.hidden {
+      transform: translateY(-100%);
+      box-shadow: none;
+    }
+    .basmala {
+      font-family: 'Amiri', serif;
+      font-size: 2.1rem;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      line-height: 1.4;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+      margin: 4px 0 12px;
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .font-row {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+      padding: 4px 12px;
+      gap: 8px;
+    }
+    .font-row button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+    .font-row button:hover { opacity: 1; }
+    .font-row span {
+      color: #fff;
+      font-size: 0.95rem;
+      min-width: 24px;
+      text-align: center;
+    }
+    .font-row .font-T {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      border-right: 1px solid rgba(255,255,255,0.3);
+      padding-right: 10px;
+    }
+    .theme-btn,
+    .search-toggle-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .theme-btn:hover,
+    .search-toggle-btn:hover,
+    .search-toggle-btn.active {
+      background: rgba(255,255,255,0.25);
+    }
+    .header-search-panel {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .header-search-panel[hidden] {
+      display: none !important;
+    }
+    .header-search-input {
+      width: min(100%, 560px);
+      padding: 12px 16px;
+      border: 1.5px solid rgba(255,255,255,0.24);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.95rem;
+      backdrop-filter: blur(8px);
+    }
+    .header-search-input::placeholder {
+      color: rgba(255,255,255,0.72);
+    }
+    .header-search-input:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.18);
+    }
+
+    /* ─── Navigation Tabs ─── */
+    nav {
+      background: var(--bg-card);
+      padding: 10px 12px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 110px;
+      z-index: 99;
+      flex-wrap: wrap;
+      transition: top 0.35s ease;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--green-dark);
+      color: #fff;
+      border-color: var(--green-dark);
+    }
+    .tab-btn:hover:not(.active) {
+      border-color: var(--green-mid);
+      color: var(--green-dark);
+    }
+
+    /* ─── Main Content ─── */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 12px 40px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ─── Daily Dua Card ─── */
+    .daily-dua-card {
+      background: linear-gradient(135deg, #fffbf0, #fff8e6);
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+  	display: none;
+
+    }
+    body.dark .daily-dua-card {
+      background: linear-gradient(135deg, #2a2210, #1e1a08);
+      border-color: var(--gold);
+    }
+    .daily-dua-card .section-label {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+    .daily-dua-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.35rem;
+      line-height: 1.9;
+      text-align: center;
+      color: var(--text-main);
+      padding: 12px 0;
+    }
+    .daily-dua-desc {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ─── Section Heading ─── */
+    .section-heading {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .section-heading h2 {
+      font-size: 1.4rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .section-heading p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* ─── Category Browser ─── */
+    .category-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .level-tabs,
+    .sublevel-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .sublevel-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .sublevel-wrap[hidden] {
+      display: none !important;
+    }
+    .sublevel-title {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .cat-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-sub);
+      cursor: pointer;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .level2-btn {
+      font-weight: 700;
+      padding: 8px 16px;
+    }
+    .cat-btn.active {
+      background: var(--green-dark);
+      color: #fff;
+      border-color: var(--green-dark);
+    }
+    .cat-btn:hover:not(.active) {
+      border-color: var(--green-mid);
+    }
+
+    /* ─── Dua Cards ─── */
+    .dua-list { display: flex; flex-direction: column; gap: 16px; }
+    .dua-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.15s;
+    }
+    .dua-card:hover { transform: translateY(-1px); }
+
+    .dua-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .dua-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .dua-icon { font-size: 1.1rem; }
+
+    .dua-text-box {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+    }
+    body.dark .dua-text-box { background: #111; }
+    .dua-text {
+      font-family: 'Amiri', serif;
+      font-size: var(--font-size);
+      line-height: 2;
+      text-align: center;
+      color: var(--text-main);
+      transition: font-size 0.2s;
+      white-space: pre-line;
+
+    }
+
+    .dua-desc {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    /* ─── Counter (single row) ─── */
+    .counter-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .counter-label { color: var(--text-light); font-size: 0.8rem; white-space: nowrap; }
+    .counter-nums  { color: var(--green-mid); font-weight: 700; font-size: 0.82rem; white-space: nowrap; }
+    .counter-bar-track {
+      flex: 1;
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .counter-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-mid), var(--gold));
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .counter-done {
+      font-size: 0.78rem;
+      color: var(--green-mid);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .btn-tasbeeh {
+      flex-shrink: 0;
+      padding: 7px 20px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn-tasbeeh:hover { background: var(--green-mid); }
+    .btn-tasbeeh:disabled { background: #aaa; cursor: not-allowed; }
+    .btn-reset {
+      flex-shrink: 0;
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--text-light);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-reset:hover { border-color: var(--green-mid); color: var(--green-mid); }
+
+    /* ─── Action Row (counter + share on one line) ─── */
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .action-row .counter-section {
+      flex: 1;
+      margin-bottom: 0;
+      min-width: 0;
+    }
+    .action-row .share-row {
+      flex-shrink: 0;
+    }
+    /* separator between counter and share */
+    .action-row .share-row::before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+      margin-left: 2px;
+    }
+
+    /* ─── Share Buttons ─── */
+    .share-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+    .btn-share {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-share svg { display: block; }
+    .btn-copy {
+      background: #f1f5f1;
+      color: var(--text-sub);
+    }
+    .btn-copy:hover { background: #ddeedd; color: var(--green-mid); }
+    .btn-whatsapp {
+      background: #e8f5ee;
+      color: var(--green-dark);
+    }
+    .btn-whatsapp:hover { background: #c8e6d4; color: var(--green-dark); }
+    .btn-image {
+      background: #fdf6e3;
+      color: var(--gold);
+    }
+    .btn-image:hover { background: #fbe9b0; color: #a07820; }
+
+    /* ─── Mood Section ─── */
+    .mood-section { text-align: center; }
+    .mood-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .mood-sub {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+    .mood-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .mood-btn {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .mood-btn.active {
+      background: var(--green-dark);
+      color: #fff;
+      border-color: var(--green-dark);
+    }
+    .mood-btn:hover:not(.active) {
+      border-color: var(--green-mid);
+    }
+    .mood-results { text-align: right; }
+    .mood-placeholder {
+      color: var(--text-light);
+      font-size: 1rem;
+      padding: 40px 0;
+    }
+    /* ─── Qibla Section ─── */
+    .qibla-section {
+      display: grid;
+      gap: 16px;
+    }
+    .qibla-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .qibla-hero {
+      text-align: center;
+      padding: 20px 18px 10px;
+    }
+    .qibla-badge {
+      display: inline-block;
+      background: rgba(217,177,95,0.14);
+      color: var(--gold);
+      border: 1px solid rgba(217,177,95,0.26);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .qibla-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .qibla-sub {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+    .qibla-compass-card {
+      padding: 18px;
+    }
+    .qibla-compass-area {
+      position: relative;
+      width: min(100%, 360px);
+      aspect-ratio: 1 / 1;
+      margin: 0 auto 16px;
+      display: grid;
+      place-items: center;
+    }
+    .qibla-compass {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, color-mix(in srgb, var(--gold-light) 10%, var(--bg-card) 90%) 0 48%, var(--bg-card) 49% 100%),
+        linear-gradient(180deg, color-mix(in srgb, var(--bg) 65%, var(--bg-card) 35%), var(--bg-card));
+      border: 1px solid var(--border);
+      box-shadow: inset 0 0 0 10px color-mix(in srgb, var(--bg) 55%, var(--bg-card) 45%);
+    }
+    .qibla-ring {
+      position: absolute;
+      inset: 0;
+      transition: transform .18s linear;
+    }
+    .qibla-tick {
+      position: absolute;
+      left: 50%;
+      top: 4%;
+      width: 2px;
+      height: 10%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.05));
+      transform-origin: center 410%;
+    }
+    .qibla-tick.small {
+      width: 1px;
+      height: 6%;
+      opacity: 0.4;
+    }
+    .qibla-cardinal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 34px;
+      margin-left: -17px;
+      margin-top: -12px;
+      text-align: center;
+      font-weight: 800;
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+    .qibla-cardinal.n {
+      color: var(--gold);
+    }
+    .qibla-center {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff, #f6f1e7 25%, var(--gold-light) 55%, var(--green-dark) 100%);
+      z-index: 5;
+      box-shadow: 0 0 0 6px rgba(255,255,255,0.05);
+    }
+    .qibla-arrow-wrap {
+      position: absolute;
+      inset: 0;
+      transition: transform .18s linear;
+      z-index: 3;
+    }
+    .qibla-arrow {
+      position: absolute;
+      left: 50%;
+      top: 12%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 92px solid var(--gold);
+      filter: drop-shadow(0 8px 12px rgba(217,177,95,0.24));
+    }
+    .qibla-arrow::after {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 84px;
+      width: 12px;
+      height: 34px;
+      border-radius: 0 0 10px 10px;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    }
+    .qibla-label {
+      position: absolute;
+      left: 50%;
+      top: 24%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #2b210b;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      z-index: 4;
+      white-space: nowrap;
+    }
+    .qibla-face-line {
+      position: absolute;
+      top: 14%;
+      left: 50%;
+      width: 4px;
+      height: 34%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(233,201,131,0.25), rgba(255,255,255,0.02));
+      z-index: 2;
+    }
+    .qibla-bigtext {
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin: 0 0 8px;
+      color: var(--text-main);
+    }
+    .qibla-smalltext {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.8;
+    }
+    .qibla-info {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .qibla-box {
+      background: color-mix(in srgb, var(--bg) 35%, var(--bg-card) 65%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
+    }
+    .qibla-box-label {
+      color: var(--text-light);
+      font-size: 0.75rem;
+      margin-bottom: 6px;
+    }
+    .qibla-box-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .qibla-controls {
+      display: grid;
+      gap: 10px;
+      padding: 0 18px 18px;
+    }
+    .btn-locate {
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #2d220b;
+      border: none;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .btn-locate:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+    .qibla-status {
+      background: color-mix(in srgb, var(--bg) 35%, var(--bg-card) 65%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      line-height: 1.8;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+      min-height: 56px;
+    }
+    .qibla-status.ok {
+      color: #1f7a36;
+    }
+    .qibla-status.danger {
+      color: #a53434;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--green-dark);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 14px 16px;
+      font-family: 'Amiri', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── Toast ─── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #222;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'Noto Naskh Arabic', serif;
+      z-index: 999;
+      transition: transform 0.3s;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ─── Hidden canvas for image generation ─── */
+    #img-canvas { display: none; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 400px) {
+      .basmala { font-size: 1.6rem; }
+      .share-row { justify-content: center; }
+      .compass-outer { width: 180px; height: 180px; }
+      .compass-inner { width: 80px; height: 80px; }
+    }
+  </style>
+</head>
+<body class="pattern-bg">
+
+<!-- Header -->
+<header>
+  <div class="basmala">﷽</div>
+  <div class="subtitle">دليلك الإسلامي اليومي</div>
+  <div class="header-controls">
+    <div class="font-row">
+      <button onclick="changeFont(1)" aria-label="تكبير الخط">+</button>
+      <span id="font-display">18</span>
+      <button onclick="changeFont(-1)" aria-label="تصغير الخط">−</button>
+      <button class="font-T" onclick="resetFont()" aria-label="إعادة حجم الخط">T</button>
+    </div>
+    <button class="search-toggle-btn" id="search-toggle-btn" onclick="toggleSearch()" aria-label="فتح البحث">🔎</button>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" aria-label="تبديل الوضع">🌙</button>
+  </div>
+  <div class="header-search-panel" id="header-search-panel" hidden>
+    <input
+      id="dua-search"
+      class="header-search-input"
+      type="search"
+      placeholder="ابحث في جميع الأدعية والأذكار..."
+      oninput="handleSearchInput(this.value)"
+    >
+  </div>
+</header>
+
+<!-- Navigation -->
+<nav id="main-nav">
+  <button class="tab-btn active" onclick="switchTab('duas')" id="tab-duas">📖 الأدعية والأذكار</button>
+  <button class="tab-btn" onclick="switchTab('mood')" id="tab-mood">🤲 حسب حالتك</button>
+  <button class="tab-btn" onclick="switchTab('qibla')" id="tab-qibla">🧭 اتجاه القبلة</button>
+</nav>
+
+<main>
+
+  <!-- ═══════════════════ TAB 1: DUAS ═══════════════════ -->
+  <div class="tab-panel active" id="panel-duas">
+
+    <!-- Daily Dua -->
+    <div class="daily-dua-card">
+      <div class="section-label">⭐ دعاء اليوم</div>
+      <div class="daily-dua-text" id="daily-dua-text"></div>
+      <div class="daily-dua-desc" id="daily-dua-desc"></div>
+    </div> 
+
+    <!-- Section Heading -->
+    <div class="section-heading">
+      <h2>📖 الأدعية والأذكار</h2>
+      
+    </div>
+
+    <!-- Category Browser -->
+<div class="category-filter">
+  <div class="level-tabs" id="level2-tabs"></div>
+  <div class="sublevel-wrap" id="level3-wrap" hidden>
+    <div class="sublevel-title" id="level3-title"></div>
+    <div class="sublevel-tabs" id="level3-tabs"></div>
+  </div>
+</div>
+
+    <!-- Duas List -->
+    <div class="dua-list" id="duas-list"></div>
+  </div>
+
+  <!-- ═══════════════════ TAB 2: MOOD ═══════════════════ -->
+  <div class="tab-panel" id="panel-mood">
+    <div class="mood-section">
+      <div class="mood-heading">🤲 حسب حالتك</div>
+      <div class="mood-sub">كيف تحس اليوم؟</div>
+      <div class="mood-grid">
+        <button class="mood-btn" onclick="filterMood('anxious', this)">😰 متوتر</button>
+        <button class="mood-btn" onclick="filterMood('sad', this)">😢 حزين</button>
+        <button class="mood-btn" onclick="filterMood('grateful', this)">🤲 شاكر لله</button>
+        <button class="mood-btn" onclick="filterMood('sick', this)">🤒 أبي دعاء شفاء</button>
+        <button class="mood-btn" onclick="filterMood('rizq', this)">💰 أبي دعاء رزق</button>
+        <button class="mood-btn" onclick="filterMood('guidance', this)">🌟 أبي هداية</button>
+        <button class="mood-btn" onclick="filterMood('protection', this)">🛡️ أبي حماية</button>
+      </div>
+      <div class="mood-results dua-list" id="mood-list">
+        <div class="mood-placeholder">اختر حالتك لعرض الأدعية المناسبة</div>
+      </div>
+    </div>
+  </div>
+  <!-- ═══════════════════ TAB 3: QIBLA ═══════════════════ -->
+  <div class="tab-panel" id="panel-qibla">
+    <div class="qibla-section">
+      <section class="qibla-card qibla-hero">
+        <div class="qibla-badge">🕋 تحديد القبلة</div>
+        <div class="qibla-heading">🧭 اتجاه القبلة</div>
+        <div class="qibla-sub">اضغط الزر واسمح للموقع والبوصلة ليظهر لك الاتجاه الحقيقي مع دوران الجوال.</div>
+      </section>
+
+      <section class="qibla-card qibla-compass-card">
+        <div class="qibla-compass-area">
+          <div class="qibla-compass"></div>
+          <div class="qibla-ring" id="ring"></div>
+          <div class="qibla-face-line"></div>
+          <div class="qibla-arrow-wrap" id="qiblaArrowWrap">
+            <div class="qibla-label">القبلة</div>
+            <div class="qibla-arrow"></div>
+          </div>
+          <div class="qibla-center"></div>
+        </div>
+
+        <div class="qibla-bigtext" id="directionText">شغّل محدد القبلة</div>
+        <p class="qibla-smalltext" id="subDirectionText">سيظهر السهم الذهبي اتجاه القبلة، ومع دعم البوصلة سيدور مع اتجاه الجوال.</p>
+
+        <div class="qibla-info">
+          <div class="qibla-box">
+            <div class="qibla-box-label">اتجاه القبلة</div>
+            <div class="qibla-box-value" id="bearingText">—°</div>
+          </div>
+          <div class="qibla-box">
+            <div class="qibla-box-label">اتجاه الجوال</div>
+            <div class="qibla-box-value" id="headingText">—°</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="qibla-card qibla-controls">
+        <button class="btn-locate" id="startBtn">تشغيل محدد القبلة</button>
+        <div class="qibla-status" id="statusBox">اضغط على الزر ثم اسمح بالوصول إلى الموقع والبوصلة.</div>
+      </section>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  اللهم تقبل منا إنك أنت السميع العليم
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Hidden canvas for image export -->
+<canvas id="img-canvas"></canvas>
+
+<!-- بيانات الأدعية — عدّل ملف duas-data.js لإضافة أو تغيير الأدعية -->
+<script src="duas-data.js"></script>
+<script>
+// ═══════════════════ DATA (loaded from duas-data.json) ═══════════════════
+let duas = [];
+
+const counters = {};
+
+// Font size state
+let fontSize = 18;
+let currentTab = 'duas';
+let currentGroup = 'all';
+let currentSub = 'all';
+let currentSearch = '';
+let searchOpen = false;
+
+const CATEGORY_GROUPS = [
+  { id: 'all', label: '🔖 الكل', categories: [] },
+  { id: 'morning', label: '☀️ أذكار الصباح', categories: ['morning'] },
+  {
+    id: 'night',
+    label: '🌙 المساء والنوم',
+    title: 'المساء والنوم',
+    categories: ['evening', 'sleep', 'wakeup'],
+    subs: [
+      { id: 'evening', label: '🌙 أذكار المساء' },
+      { id: 'sleep', label: '😴 أذكار النوم' },
+      { id: 'wakeup', label: '🌅 أذكار الاستيقاظ' }
+    ]
+  },
+  { id: 'tasbih', label: '✨ تسابيح', categories: ['tasbih'] },
+  { id: 'istighfar', label: '✨ استغفار', categories: ['istighfar'] },
+  { id: 'ruqyah', label: '🛡️ الرقية الشرعية', categories: ['ruqyah'] },
+  {
+    id: 'prayer_related',
+    label: '🕌 الأذكار المتعلقة بالصلاة',
+    title: 'الأذكار المتعلقة بالصلاة',
+    categories: ['adhan', 'wudu', 'mosque', 'prayer', 'after_prayer'],
+    subs: [
+      { id: 'adhan', label: '📢 أذكار الآذان' },
+      { id: 'wudu', label: '💧 أذكار الوضوء' },
+      { id: 'mosque', label: '🕌 أذكار المسجد' },
+      { id: 'prayer', label: '🕌 أذكار الصلاة' },
+      { id: 'after_prayer', label: '🕌 أذكار بعد الصلاة' }
+    ]
+  },
+  {
+    id: 'misc',
+    label: '📚 أذكار متفرقة',
+    title: 'متفرقات',
+    categories: ['misc', 'death', 'bathroom', 'food', 'home', 'hajj', 'quran_khatm'],
+    subs: [
+      { id: 'misc', label: '📚 أذكار متفرقة' },
+      { id: 'death', label: '🕯️ أدعية للميت' },
+      { id: 'bathroom', label: '🚪 أذكار الخلاء' },
+      { id: 'food', label: '🍽️ أذكار الطعام' },
+      { id: 'home', label: '🏠 أذكار المنزل' },
+      { id: 'hajj', label: '🕋 أذكار الحج والعمرة' },
+      { id: 'quran_khatm', label: '📘 دعاء ختم القرآن الكريم' }
+    ]
+  },
+  {
+    id: 'general_dua',
+    label: '🤲 جوامع الدعاء',
+    title: 'جوامع الدعاء',
+    categories: ['general_dua', 'prophetic', 'quran_dua', 'prophets_dua'],
+    subs: [
+      { id: 'general_dua', label: '🤲 جوامع الدعاء' },
+      { id: 'prophetic', label: '🕋 أدعية نبوية' },
+      { id: 'quran_dua', label: '📖 الأدعية القرآنية' },
+      { id: 'prophets_dua', label: '🕊️ أدعية الأنبياء' }
+    ]
+  }
+];
+
+// ═══════════════════ RENDER ═══════════════════
+function buildDuaCard(dua, context) {
+  const hasCounter = dua.count !== null;
+  const cur = hasCounter ? (counters[dua.id] || 0) : 0;
+  const done = hasCounter && cur >= dua.count;
+  const pct = hasCounter ? Math.min((cur / dua.count) * 100, 100) : 0;
+
+  return `
+    <div class="dua-card" id="dua-${dua.id}-${context}">
+      <div class="dua-header">
+        <span class="dua-icon">📖</span>
+        <span class="dua-title">${dua.title}</span>
+      </div>
+      <div class="dua-text-box">
+        <div class="dua-text" style="font-size:${fontSize}px">${dua.text}</div>
+      </div>
+      <div class="dua-desc">${dua.desc}</div>
+
+      <div class="action-row">
+        ${hasCounter ? `
+          <div class="counter-section" id="counter-${dua.id}-${context}">
+            <button class="btn-tasbeeh" ${done ? 'disabled' : ''} onclick="incrementCount(${dua.id}, '${context}')">عدّ</button>
+            <div class="counter-bar-track">
+              <div class="counter-bar-fill" style="width:${pct}%"></div>
+            </div>
+            <span class="counter-label">العدد:</span>
+            <span class="counter-nums">${cur} / ${dua.count}</span>
+            ${done ? `<span class="counter-done">✓ اكتمل</span>` : ''}
+            <button class="btn-reset" onclick="resetCount(${dua.id}, '${context}')" title="إعادة">↺</button>
+          </div>
+        ` : '<div style="flex:1"></div>'}
+        <div class="share-row">
+          <button class="btn-share btn-copy" onclick="copyDua(${dua.id})" title="نسخ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button class="btn-share btn-whatsapp" onclick="shareWhatsApp(${dua.id})" title="واتساب">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </button>
+          <button class="btn-share btn-image" onclick="downloadImage(${dua.id})" title="تحميل صورة">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderDuas(list, containerId, context) {
+  const el = document.getElementById(containerId);
+  if (!list.length) {
+    el.innerHTML = '<div class="mood-placeholder">لا توجد نتائج مطابقة حالياً</div>';
+    return;
+  }
+  el.innerHTML = list.map(d => buildDuaCard(d, context)).join('');
+  updateFontSizes();
+}
+
+// ═══════════════════ DAILY DUA ═══════════════════
+function setDailyDua() {
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const daily = duas[dayOfYear % duas.length];
+  document.getElementById('daily-dua-text').textContent = daily.text;
+  document.getElementById('daily-dua-desc').textContent = daily.desc;
+}
+
+// ═══════════════════ TAB SWITCHING ═══════════════════
+function switchTab(tab, options = {}) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (options.updateHash !== false) updateHash();
+}
+
+// ═══════════════════ CATEGORY FILTER ═══════════════════
+function getGroupConfig(groupId) {
+  return CATEGORY_GROUPS.find(group => group.id === groupId) || CATEGORY_GROUPS[0];
+}
+
+function getDuaCategories(dua) {
+  const raw = dua.categories ?? dua.category ?? [];
+  if (Array.isArray(raw)) return raw;
+  return raw ? [raw] : [];
+}
+
+function normalizeArabicText(text) {
+  return String(text || '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function matchesSearch(dua, term) {
+  if (!term) return true;
+  const haystack = normalizeArabicText([
+    dua.title,
+    dua.text,
+    dua.desc,
+    ...getDuaCategories(dua)
+  ].join(' '));
+  return haystack.includes(term);
+}
+
+function matchesAnyCategory(dua, categories) {
+  if (!categories || !categories.length) return true;
+  const duaCategories = getDuaCategories(dua);
+  return categories.some(category => duaCategories.includes(category));
+}
+
+function getActiveCategories() {
+  if (currentSearch.trim()) return [];
+  if (currentGroup === 'all') return [];
+  if (currentSub !== 'all') return [currentSub];
+  return getGroupConfig(currentGroup).categories || [];
+}
+
+function getFilteredDuas() {
+  const term = normalizeArabicText(currentSearch);
+  if (term) {
+    return duas.filter(dua => matchesSearch(dua, term));
+  }
+  const activeCategories = getActiveCategories();
+  return duas.filter(dua => matchesAnyCategory(dua, activeCategories));
+}
+
+function renderMainDuas() {
+  renderDuas(getFilteredDuas(), 'duas-list', 'main');
+}
+
+function renderLevel2Tabs() {
+  const container = document.getElementById('level2-tabs');
+  if (!container) return;
+  container.innerHTML = CATEGORY_GROUPS.map(group => `
+    <button class="cat-btn level2-btn ${group.id === currentGroup ? 'active' : ''}" onclick="selectGroup('${group.id}')">${group.label}</button>
+  `).join('');
+}
+
+function renderLevel3Tabs() {
+  const wrap = document.getElementById('level3-wrap');
+  const title = document.getElementById('level3-title');
+  const container = document.getElementById('level3-tabs');
+  if (!wrap || !title || !container) return;
+
+  const group = getGroupConfig(currentGroup);
+  if (!group.subs || !group.subs.length) {
+    wrap.hidden = true;
+    title.textContent = '';
+    container.innerHTML = '';
+    return;
+  }
+
+  wrap.hidden = false;
+  <!-- title.textContent = `التفريع داخل ${group.title || group.label}`;  -->
+  const subItems = [{ id: 'all', label: '🔖 الكل' }, ...group.subs];
+  container.innerHTML = subItems.map(item => `
+    <button class="cat-btn ${item.id === currentSub ? 'active' : ''}" onclick="selectSub('${item.id}')">${item.label}</button>
+  `).join('');
+}
+
+function selectGroup(groupId, options = {}) {
+  currentGroup = getGroupConfig(groupId).id;
+  currentSub = 'all';
+  renderLevel2Tabs();
+  renderLevel3Tabs();
+  renderMainDuas();
+  if (options.updateHash !== false) updateHash();
+}
+
+function selectSub(subId, options = {}) {
+  currentSub = subId;
+  renderLevel3Tabs();
+  renderMainDuas();
+  if (options.updateHash !== false) updateHash();
+}
+
+function updateSearchUI() {
+  const panel = document.getElementById('header-search-panel');
+  const button = document.getElementById('search-toggle-btn');
+  if (panel) panel.hidden = !searchOpen;
+  if (button) button.classList.toggle('active', searchOpen || !!currentSearch.trim());
+}
+
+function toggleSearch(forceOpen) {
+  if (typeof forceOpen === 'boolean') {
+    searchOpen = forceOpen;
+  } else {
+    searchOpen = !searchOpen;
+  }
+
+  if (!searchOpen && currentSearch.trim()) {
+    currentSearch = '';
+    const searchEl = document.getElementById('dua-search');
+    if (searchEl) searchEl.value = '';
+    renderMainDuas();
+  }
+
+  updateSearchUI();
+  if (searchOpen) {
+    const searchEl = document.getElementById('dua-search');
+    if (searchEl) searchEl.focus();
+  }
+  updateHash();
+}
+
+function handleSearchInput(value) {
+  currentSearch = value;
+  if (currentSearch.trim()) {
+    searchOpen = true;
+    if (currentTab !== 'duas') switchTab('duas', { updateHash: false });
+  }
+  updateSearchUI();
+  renderMainDuas();
+  updateHash();
+}
+
+function readHashState() {
+  const hash = window.location.hash.replace(/^#/, '');
+  const params = new URLSearchParams(hash);
+  return {
+    tab: params.get('tab') || 'duas',
+    group: params.get('group') || 'all',
+    sub: params.get('sub') || 'all',
+    q: params.get('q') || '',
+    search: params.get('search') || '0'
+  };
+}
+
+function updateHash() {
+  const params = new URLSearchParams();
+  if (currentTab !== 'duas') params.set('tab', currentTab);
+  if (currentGroup !== 'all') params.set('group', currentGroup);
+  if (currentSub !== 'all') params.set('sub', currentSub);
+  if (currentSearch.trim()) params.set('q', currentSearch.trim());
+  if (searchOpen && !currentSearch.trim()) params.set('search', '1');
+  const hash = params.toString();
+  const url = hash ? ('#' + hash) : (window.location.pathname + window.location.search);
+  history.replaceState(null, '', url);
+}
+
+function applyHashState() {
+  const state = readHashState();
+  const safeTab = document.getElementById('panel-' + state.tab) ? state.tab : 'duas';
+  const group = getGroupConfig(state.group);
+  const safeSub = (group.subs || []).some(item => item.id === state.sub) ? state.sub : 'all';
+
+  currentGroup = group.id;
+  currentSub = safeSub;
+  currentSearch = state.q;
+  searchOpen = state.search === '1' || !!state.q;
+
+  const searchEl = document.getElementById('dua-search');
+  if (searchEl) searchEl.value = currentSearch;
+
+  switchTab(safeTab, { updateHash: false });
+  updateSearchUI();
+  renderLevel2Tabs();
+  renderLevel3Tabs();
+  renderMainDuas();
+}
+
+// ═══════════════════ MOOD FILTER ═══════════════════
+let currentMood = null;
+function filterMood(mood, btn) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  if (currentMood === mood) {
+    currentMood = null;
+    document.getElementById('mood-list').innerHTML = '<div class="mood-placeholder">اختر حالتك لعرض الأدعية المناسبة</div>';
+    return;
+  }
+  currentMood = mood;
+  btn.classList.add('active');
+  const filtered = duas.filter(d => d.moods.includes(mood));
+  renderDuas(filtered, 'mood-list', 'mood');
+}
+
+// ═══════════════════ COUNTER ═══════════════════
+function incrementCount(id, ctx) {
+  const dua = duas.find(d => d.id === id);
+  if (!dua || counters[id] >= dua.count) return;
+  counters[id]++;
+  refreshCounter(id, ctx, dua);
+}
+
+function resetCount(id, ctx) {
+  counters[id] = 0;
+  const dua = duas.find(d => d.id === id);
+  refreshCounter(id, ctx, dua);
+}
+
+function refreshCounter(id, ctx, dua) {
+  const cur = counters[id];
+  const done = cur >= dua.count;
+  const pct = Math.min((cur / dua.count) * 100, 100);
+  const el = document.getElementById(`counter-${id}-${ctx}`);
+  if (!el) return;
+  el.querySelector('.counter-nums').textContent = `${cur} / ${dua.count}`;
+  el.querySelector('.counter-bar-fill').style.width = pct + '%';
+  const doneEl = el.querySelector('.counter-done');
+  if (done) {
+    if (!doneEl) {
+      const span = document.createElement('span');
+      span.className = 'counter-done';
+      span.textContent = '✓ اكتمل';
+      el.querySelector('.btn-reset').before(span);
+    }
+    el.querySelector('.btn-tasbeeh').disabled = true;
+  } else {
+    if (doneEl) doneEl.remove();
+    el.querySelector('.btn-tasbeeh').disabled = false;
+  }
+}
+
+// ═══════════════════ SHARE ═══════════════════
+function getDua(id) { return duas.find(d => d.id === id); }
+
+function copyDua(id) {
+  const d = getDua(id);
+  const text = `${d.title}\n\n${d.text}\n\n${d.desc}`;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ تم نسخ الدعاء'));
+}
+
+function shareWhatsApp(id) {
+  const d = getDua(id);
+  const text = encodeURIComponent(`*${d.title}*\n\n${d.text}\n\n_${d.desc}_`);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+
+function sanitizeFileName(name) {
+  return (name || 'dua')
+    .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function wrapText(ctx, text, maxWidth) {
+  if (!text) return [];
+  const paragraphs = String(text).split(/\n+/).map(p => p.trim()).filter(Boolean);
+  const lines = [];
+
+  paragraphs.forEach((paragraph, pIndex) => {
+    const words = paragraph.split(/\s+/);
+    let line = '';
+
+    words.forEach(word => {
+      const testLine = line ? `${line} ${word}` : word;
+      if (ctx.measureText(testLine).width > maxWidth && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = testLine;
+      }
+    });
+
+    if (line) lines.push(line);
+
+    if (pIndex < paragraphs.length - 1) {
+      lines.push('');
+    }
+  });
+
+  return lines;
+}
+
+function getTextLayout(ctx, text, maxWidth, fontFamily) {
+  const presets = [
+  { size: 64, lineHeight: 96 },
+  { size: 58, lineHeight: 88 },
+  { size: 52, lineHeight: 80 },
+  { size: 48, lineHeight: 72 },
+  { size: 44, lineHeight: 66 },
+  { size: 40, lineHeight: 60 },
+  { size: 36, lineHeight: 54 }
+];
+
+  for (const preset of presets) {
+    ctx.font = `${preset.size}px ${fontFamily}`;
+    const lines = wrapText(ctx, text, maxWidth);
+    if (lines.length <= 11) {
+      return {
+        fontSize: preset.size,
+        lineHeight: preset.lineHeight,
+        lines
+      };
+    }
+  }
+
+  ctx.font = `42px ${fontFamily}`;
+  return {
+    fontSize: 42,
+    lineHeight: 64,
+    lines: wrapText(ctx, text, maxWidth)
+  };
+}
+
+function drawRoundedRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + w - radius, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+  ctx.lineTo(x + w, y + h - radius);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+  ctx.lineTo(x + radius, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+async function downloadImage(id) {
+  await document.fonts.load('700 86px Amiri');
+  await document.fonts.load('700 62px Amiri');
+  await document.fonts.load('400 74px Amiri');
+  await document.fonts.load('400 50px Amiri');
+  await document.fonts.ready;
+
+  const d = getDua(id);
+  if (!d) return;
+
+  const canvas = document.getElementById('img-canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = 1080;
+  canvas.height = 1920;
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.direction = 'rtl';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  // colors
+const BG = '#5A1F2B';
+const GOLD = '#D9B15F';
+const TEXT = '#F4E7D6';
+
+  // background
+  ctx.fillStyle = BG;
+  ctx.fillRect(0, 0, W, H);
+
+  // double border
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 8;
+  ctx.strokeRect(34, 34, W - 68, H - 68);
+
+  ctx.lineWidth = 2;
+  ctx.strokeRect(54, 54, W - 108, H - 108);
+
+  // basmala
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 86px Amiri';
+  ctx.fillText('﷽', W / 2, 155);
+
+  // top divider
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(180, 205);
+  ctx.lineTo(W - 180, 205);
+  ctx.stroke();
+
+  // title
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 62px Amiri';
+  ctx.fillText(d.title || 'دعاء', W / 2, 365);
+
+  // text layout
+  const textLayout = getTextLayout(ctx, d.text || '', 860, 'Amiri');
+  const duaLines = textLayout.lines;
+  const duaFontSize = textLayout.fontSize;
+  const duaLineHeight = textLayout.lineHeight;
+
+  ctx.fillStyle = TEXT;
+  ctx.font = `${duaFontSize}px Amiri`;
+
+  const textBlockHeight = duaLines.length * duaLineHeight;
+  const textTop = Math.max(520, 900 - textBlockHeight / 2);
+  let y = textTop;
+
+  duaLines.forEach(line => {
+    if (line === '') {
+      y += Math.round(duaLineHeight * 0.7);
+    } else {
+      ctx.fillText(line, W / 2, y);
+      y += duaLineHeight;
+    }
+  });
+
+  // lower divider
+  //const dividerY = Math.min(y + 45, 1460);
+  //ctx.strokeStyle = 'rgba(212,168,67,0.45)';
+  //ctx.lineWidth = 1.5;
+  //ctx.beginPath();
+  //ctx.moveTo(180, dividerY);
+  //ctx.lineTo(W - 180, dividerY);
+  //ctx.stroke();
+
+  // description box
+  const desc = (d.desc || '').trim();
+  if (desc) {
+    ctx.font = '400 50px Amiri';
+    const descLines = wrapText(ctx, desc, 850);
+    const descLineHeight = 64;
+    const boxHeight = Math.max(140, descLines.length * descLineHeight + 56);
+    const boxY = 1510;
+
+    ctx.fillStyle = 'rgba(240,230,208,0.12)';
+    drawRoundedRect(ctx, 78, boxY, W - 156, boxHeight, 18);
+    ctx.fill();
+
+    ctx.fillStyle = TEXT;
+    ctx.font = '400 50px Amiri';
+
+    let descY = boxY + 68;
+    descLines.forEach(line => {
+      ctx.fillText(line, W / 2, descY);
+      descY += descLineHeight;
+    });
+  }
+
+  // footer
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 34px Amiri';
+  ctx.fillText(' اللهم تقبل منا ', W / 2, 1848);
+
+  const a = document.createElement('a');
+  a.download = `${sanitizeFileName(d.title)}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+
+  showToast('✓ جاري التحميل...');
+}
+// ═══════════════════ FONT SIZE ═══════════════════
+function changeFont(delta) {
+  fontSize = Math.max(14, Math.min(30, fontSize + delta));
+  document.getElementById('font-display').textContent = fontSize;
+  document.documentElement.style.setProperty('--font-size', fontSize + 'px');
+  updateFontSizes();
+}
+
+function resetFont() {
+  fontSize = 18;
+  document.getElementById('font-display').textContent = 18;
+  document.documentElement.style.setProperty('--font-size', '18px');
+  updateFontSizes();
+}
+
+function updateFontSizes() {
+  document.querySelectorAll('.dua-text').forEach(el => {
+    el.style.fontSize = fontSize + 'px';
+  });
+}
+
+// ═══════════════════ DARK MODE ═══════════════════
+function toggleTheme() {
+  const dark = document.body.classList.toggle('dark');
+  document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+}
+
+// ═══════════════════ QIBLA ═══════════════════
+const KAABA = { lat: 21.4225, lon: 39.8262 };
+let qiblaBearing = null;
+let heading = null;
+let hasCompass = false;
+let qiblaInitialized = false;
+
+function qiblaNorm(angle) {
+  return (angle % 360 + 360) % 360;
+}
+
+function qiblaToRad(deg) {
+  return deg * Math.PI / 180;
+}
+
+function qiblaToDeg(rad) {
+  return rad * 180 / Math.PI;
+}
+
+function getBearing(lat1, lon1, lat2, lon2) {
+  const p1 = qiblaToRad(lat1);
+  const p2 = qiblaToRad(lat2);
+  const dl = qiblaToRad(lon2 - lon1);
+  const y = Math.sin(dl) * Math.cos(p2);
+  const x = Math.cos(p1) * Math.sin(p2) - Math.sin(p1) * Math.cos(p2) * Math.cos(dl);
+  return qiblaNorm(qiblaToDeg(Math.atan2(y, x)));
+}
+
+function getHeading(event) {
+  if (typeof event.webkitCompassHeading === 'number' && !Number.isNaN(event.webkitCompassHeading)) {
+    return qiblaNorm(event.webkitCompassHeading);
+  }
+  if (typeof event.alpha === 'number' && !Number.isNaN(event.alpha)) {
+    return qiblaNorm(360 - event.alpha);
+  }
+  return null;
+}
+
+function getTurnText(current, target) {
+  let diff = qiblaNorm(target - current);
+  if (diff > 180) diff -= 360;
+  const distance = Math.abs(diff);
+  if (distance < 8) return 'أنت باتجاه القبلة تقريباً';
+  if (diff > 0) return `لف يمين ${Math.round(distance)}°`;
+  return `لف يسار ${Math.round(distance)}°`;
+}
+
+function setStatus(text, cls = '') {
+  const statusBox = document.getElementById('statusBox');
+  if (!statusBox) return;
+  statusBox.className = 'qibla-status' + (cls ? ' ' + cls : '');
+  statusBox.textContent = text;
+}
+
+function renderQibla() {
+  const ring = document.getElementById('ring');
+  const qiblaArrowWrap = document.getElementById('qiblaArrowWrap');
+  const bearingText = document.getElementById('bearingText');
+  const headingText = document.getElementById('headingText');
+  const directionText = document.getElementById('directionText');
+  const subDirectionText = document.getElementById('subDirectionText');
+
+  if (!ring || !qiblaArrowWrap || !bearingText || !headingText || !directionText || !subDirectionText) return;
+
+  if (qiblaBearing != null) {
+    bearingText.textContent = Math.round(qiblaBearing) + '°';
+    qiblaArrowWrap.style.transform = `rotate(${qiblaBearing}deg)`;
+  }
+
+  if (heading != null) {
+    headingText.textContent = Math.round(heading) + '°';
+    ring.style.transform = `rotate(${-heading}deg)`;
+    directionText.textContent = getTurnText(heading, qiblaBearing);
+    subDirectionText.textContent = 'السهم الذهبي هو اتجاه القبلة.';
+  } else if (qiblaBearing != null) {
+    headingText.textContent = '—°';
+    directionText.textContent = 'هذا هو اتجاه القبلة';
+    subDirectionText.textContent = 'إذا لم تعمل البوصلة، فاتبع اتجاه السهم الذهبي بالنسبة للشمال.';
+  }
+}
+
+function onOrientation(event) {
+  const value = getHeading(event);
+  if (value == null) return;
+  heading = value;
+  hasCompass = true;
+  renderQibla();
+  setStatus('اشتغلت البوصلة. إذا شعرت أن الاتجاه غير مضبوط، حرّك الجوال على شكل 8.', 'ok');
+}
+
+async function enableCompass() {
+  if (!window.isSecureContext) {
+    setStatus('يجب فتح الصفحة عبر HTTPS حتى تعمل البوصلة والموقع.', 'danger');
+    return;
+  }
+
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      const response = await DeviceOrientationEvent.requestPermission();
+      if (response !== 'granted') {
+        setStatus('لم يتم السماح للبوصلة. سنعرض اتجاه القبلة بدون دوران مباشر.', 'danger');
+        return;
+      }
+    }
+    window.addEventListener('deviceorientationabsolute', onOrientation, true);
+    window.addEventListener('deviceorientation', onOrientation, true);
+  } catch (error) {
+    setStatus('المتصفح لم يسمح بالبوصلة. سنستخدم الموقع فقط.', 'danger');
+  }
+}
+
+function locateQibla() {
+  if (!navigator.geolocation) {
+    setStatus('المتصفح لا يدعم تحديد الموقع.', 'danger');
+    return;
+  }
+
+  setStatus('جاري تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      qiblaBearing = getBearing(pos.coords.latitude, pos.coords.longitude, KAABA.lat, KAABA.lon);
+      renderQibla();
+      if (!hasCompass) {
+        setStatus('تم تحديد موقعك. إذا لم تعمل البوصلة، اتبع السهم الذهبي.', 'ok');
+      } else {
+        setStatus('تم تحديد موقعك والقبلة جاهزة.', 'ok');
+      }
+    },
+    () => {
+      setStatus('تعذر الوصول إلى موقعك. تأكد من تفعيل الموقع والسماح للمتصفح.', 'danger');
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 10000
+    }
+  );
+}
+
+function buildQiblaTicks() {
+  if (qiblaInitialized) return;
+  const ring = document.getElementById('ring');
+  if (!ring) return;
+
+  for (let i = 0; i < 36; i++) {
+    const tick = document.createElement('div');
+    tick.className = 'qibla-tick' + (i % 3 ? ' small' : '');
+    tick.style.transform = `translateX(-50%) rotate(${i * 10}deg)`;
+    ring.appendChild(tick);
+  }
+
+  [
+    { text: 'N', deg: 0, cls: 'n' },
+    { text: 'E', deg: 90, cls: '' },
+    { text: 'S', deg: 180, cls: '' },
+    { text: 'W', deg: 270, cls: '' }
+  ].forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'qibla-cardinal ' + item.cls;
+    el.textContent = item.text;
+    el.style.transform = `rotate(${item.deg}deg) translateY(-136px) rotate(${-item.deg}deg)`;
+    ring.appendChild(el);
+  });
+
+  const startBtn = document.getElementById('startBtn');
+  if (startBtn) {
+    startBtn.addEventListener('click', async () => {
+      await enableCompass();
+      locateQibla();
+    });
+  }
+
+  qiblaInitialized = true;
+}
+// ═══════════════════ TOAST ═══════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ═══════════════════ SCROLL HIDE/SHOW HEADER ═══════════════════
+(function () {
+  let lastY = 0;
+  const THRESHOLD = 8; // px before we react
+  window.addEventListener('scroll', () => {
+    const currentY = window.scrollY;
+    const header = document.querySelector('header');
+    const nav    = document.getElementById('main-nav');
+    const headerH = header.offsetHeight;
+
+    if (currentY <= 10) {
+      // At top — always show header
+      header.classList.remove('hidden');
+      nav.style.top = headerH + 'px';
+    } else if (currentY > lastY + THRESHOLD) {
+      // Scrolling DOWN — hide header, nav jumps to top
+      header.classList.add('hidden');
+      nav.style.top = '0px';
+    } else if (currentY < lastY - THRESHOLD) {
+      // Scrolling UP — show header, nav follows
+      header.classList.remove('hidden');
+      nav.style.top = headerH + 'px';
+    }
+    lastY = currentY;
+  }, { passive: true });
+})();
+
+// ═══════════════════ INIT ═══════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Restore theme
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-btn').textContent = '☀️';
+  }
+  // Load duas from duas-data.js
+  if (typeof DUAS_DATA !== 'undefined') {
+    duas = DUAS_DATA;
+    duas.forEach(d => { if (d.count) counters[d.id] = 0; });
+    setDailyDua();
+    applyHashState();
+    window.addEventListener('hashchange', applyHashState);
+  } else {
+    document.getElementById('duas-list').innerHTML =
+      '<div class="mood-placeholder">⚠️ تعذر تحميل البيانات. تأكد من وجود ملف duas-data.js في نفس المجلد.</div>';
+  }
+});
+</script>
+</body>
+</html>
+
+
+
+
+
