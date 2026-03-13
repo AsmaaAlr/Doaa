@@ -887,11 +887,6 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
   <div class="tab-panel" id="panel-qibla">
     <div class="qibla-v2">
 
-      <div class="qcard qhero">
-        <div class="qbadge">🕋 تحديد القبلة</div>
-        <h2>اتجاه القبلة</h2>
-        <p class="qsub">اضغط الزر، واسمح للموقع والبوصلة.</p>
-      </div>
 
       <div class="qcard compass-card2">
         <div class="compass-area2">
@@ -911,7 +906,7 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
             <div class="qvalue" id="qBearingText">—°</div>
           </div>
           <div class="qbox">
-            <div class="qlabel">اتجاه الجوال</div>
+            <div class="qlabel">اتجاه الهاتف</div>
             <div class="qvalue" id="qHeadingText">—°</div>
           </div>
         </div>
@@ -1663,7 +1658,7 @@ function toggleTheme() {
     qHeading = h;
     renderQibla();
     if(qiblaBearing2 != null)
-      setQStatus('البوصلة تعمل ✓  حرّك الجوال حركة 8 إذا الاتجاه غير دقيق.', 'ok');
+      setQStatus('البوصلة تعمل ✓  حرّك الهاتف حركة 8 إذا الاتجاه غير دقيق.', 'ok');
   }
 
   async function enableQCompass(){
