@@ -1583,7 +1583,7 @@ function toggleTheme() {
   const KAABA = { lat: 21.4225, lon: 39.8262 };
   let qiblaBearing2 = null;
   let qHeading = null;
-  let qHasCompass = false;
+  let qHasAbsoluteCompass = false;
 
   function toRad(d){ return d * Math.PI / 180; }
   function toDeg(r){ return r * 180 / Math.PI; }
@@ -1615,11 +1615,17 @@ function toggleTheme() {
   }
 
   function getQHeading(event){
-    if(typeof event.webkitCompassHeading === 'number' && !Number.isNaN(event.webkitCompassHeading))
+    // iOS: always absolute magnetic north
+    if(typeof event.webkitCompassHeading === 'number' && !Number.isNaN(event.webkitCompassHeading)){
+      qHasAbsoluteCompass = true;
       return norm(event.webkitCompassHeading);
-    if(typeof event.alpha === 'number' && !Number.isNaN(event.alpha))
+    }
+    // Android: only trust alpha when the event is explicitly flagged absolute
+    if(event.absolute === true && typeof event.alpha === 'number' && !Number.isNaN(event.alpha)){
+      qHasAbsoluteCompass = true;
       return norm(360 - event.alpha);
-    return null;
+    }
+    return null; // non-absolute reading — ignore to avoid spurious spin
   }
 
   function setQStatus(text, cls){
@@ -1635,23 +1641,25 @@ function toggleTheme() {
     const bearingText = document.getElementById('qBearingText');
     const headingText = document.getElementById('qHeadingText');
 
+    // Arrow and ring only move once we have a confirmed GPS bearing
     if(qiblaBearing2 != null){
       if(bearingText) bearingText.textContent = Math.round(qiblaBearing2) + '°';
       if(arrowWrap) arrowWrap.style.transform = `rotate(${qiblaBearing2}deg)`;
+      // Ring only spins with a verified absolute compass heading
+      if(qHeading != null && qHasAbsoluteCompass && ring)
+        ring.style.transform = `rotate(${-qHeading}deg)`;
     }
-    if(qHeading != null){
-      if(headingText) headingText.textContent = Math.round(qHeading) + '°';
-      if(ring) ring.style.transform = `rotate(${-qHeading}deg)`;
-    }
+    if(qHeading != null && headingText)
+      headingText.textContent = Math.round(qHeading) + '°';
   }
 
   function onQOrientation(event){
     const h = getQHeading(event);
-    if(h == null) return;
+    if(h == null) return; // skip non-absolute events
     qHeading = h;
-    qHasCompass = true;
     renderQibla();
-    setQStatus('اشتغلت البوصلة ✓  إذا الاتجاه مو مضبوط، حرّك الجوال حركة 8.', 'ok');
+    if(qiblaBearing2 != null)
+      setQStatus('البوصلة تعمل ✓  حرّك الجوال حركة 8 إذا الاتجاه غير دقيق.', 'ok');
   }
 
   async function enableQCompass(){
@@ -1683,7 +1691,7 @@ function toggleTheme() {
     navigator.geolocation.getCurrentPosition(pos => {
       qiblaBearing2 = getQBearing(pos.coords.latitude, pos.coords.longitude, KAABA.lat, KAABA.lon);
       renderQibla();
-      setQStatus(qHasCompass ? 'تم تحديد موقعك والقبلة جاهزة ✓' : 'تم تحديد موقعك. اتبع السهم الذهبي نحو القبلة.', 'ok');
+      setQStatus(qHasAbsoluteCompass ? 'تم تحديد موقعك والقبلة جاهزة ✓' : 'تم تحديد موقعك — اتبع السهم الذهبي نحو الشمال.', 'ok');
     }, err => {
       setQStatus('ما قدرنا نجيب موقعك. تأكد إن الموقع مفعّل ومسموح للمتصفح.', 'danger');
     }, { enableHighAccuracy:true, timeout:15000, maximumAge:10000 });
