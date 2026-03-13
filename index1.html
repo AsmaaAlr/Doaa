@@ -1641,16 +1641,20 @@ function toggleTheme() {
     const bearingText = document.getElementById('qBearingText');
     const headingText = document.getElementById('qHeadingText');
 
-    // Arrow and ring only move once we have a confirmed GPS bearing
-    if(qiblaBearing2 != null){
-      if(bearingText) bearingText.textContent = Math.round(qiblaBearing2) + '°';
+    if(qiblaBearing2 == null) return;
+
+    if(bearingText) bearingText.textContent = Math.round(qiblaBearing2) + '°';
+    if(headingText && qHeading != null) headingText.textContent = Math.round(qHeading) + '°';
+
+    if(qHeading != null && qHasAbsoluteCompass){
+      // Ring counter-rotates so N stays pointing at geographic north
+      if(ring) ring.style.transform = `rotate(${-qHeading}deg)`;
+      // Arrow must subtract heading so it stays locked on Mecca regardless of phone orientation
+      if(arrowWrap) arrowWrap.style.transform = `rotate(${qiblaBearing2 - qHeading}deg)`;
+    } else {
+      // No compass — show arrow fixed at bearing from north, ring stays still
       if(arrowWrap) arrowWrap.style.transform = `rotate(${qiblaBearing2}deg)`;
-      // Ring only spins with a verified absolute compass heading
-      if(qHeading != null && qHasAbsoluteCompass && ring)
-        ring.style.transform = `rotate(${-qHeading}deg)`;
     }
-    if(qHeading != null && headingText)
-      headingText.textContent = Math.round(qHeading) + '°';
   }
 
   function onQOrientation(event){
@@ -1771,5 +1775,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
