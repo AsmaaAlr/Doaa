@@ -280,18 +280,28 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       position: relative;
     }
     .hijri-widget-main {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px;
       font-family: 'Amiri', serif;
-      font-size: 1.45rem;
+      font-size: 1.15rem;
       line-height: 1.35;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       position: relative;
       z-index: 1;
     }
     .hijri-widget-sub {
       color: rgba(255, 247, 234, 0.78);
-      font-size: 0.82rem;
-      position: relative;
-      z-index: 1;
+      font-size: 1.15rem;
+      font-family: 'Amiri', serif;
+      line-height: 1.35;
+      white-space: nowrap;
+      display: block;
+      width: 100%;
+    }
+    .hijri-widget-main-text {
+      white-space: nowrap;
     }
     .hijri-widget-note {
       margin-top: 10px;
@@ -321,10 +331,18 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
     }
     .hijri-widget-white-days {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: center;
       gap: 8px;
       width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 2px;
+    }
+    .hijri-widget-white-days::-webkit-scrollbar {
+      display: none;
     }
     .hijri-white-day-chip {
       background: rgba(255, 255, 255, 0.08);
@@ -335,6 +353,7 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      flex: 0 0 auto;
     }
     .hijri-white-day-chip.active {
       background: rgba(233, 201, 131, 0.18);
@@ -965,8 +984,10 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
     </div> 
 
     <section class="hijri-widget" aria-label="التاريخ الهجري اليوم">
-      <div class="hijri-widget-main" id="hijri-date-primary">...</div>
-      <div class="hijri-widget-sub" id="hijri-date-secondary"></div>
+      <div class="hijri-widget-main">
+        <span class="hijri-widget-main-text" id="hijri-date-primary">...</span>
+        <span class="hijri-widget-sub" id="hijri-date-secondary"></span>
+      </div>
       <div class="hijri-widget-note" id="hijri-white-days-note"></div>
     </section>
 
@@ -1300,28 +1321,28 @@ function setHijriDate() {
     if (!Number.isInteger(hijriDay)) {
       return {
         active: false,
-        title: 'الأيام البيض',
-        text: '13 و14 و15 من كل شهر هجري.'
+        title: '',
+        text: 'الأيام البيض: 13 و14 و15 من كل شهر هجري.'
       };
     }
     if (hijriDay >= 13 && hijriDay <= 15) {
       return {
         active: true,
-        title: 'اليوم من الأيام البيض',
-        text: `${hijriDay} هجري.`
+        title: '',
+        text: `اليوم من الأيام البيض: ${hijriDay} هجري.`
       };
     }
     if (hijriDay < 13) {
       return {
         active: false,
-        title: 'الأيام البيض القادمة',
-        text: `بعد ${13 - hijriDay} يوم.`
+        title: '',
+        text: `الأيام البيض القادمة بعد ${13 - hijriDay} يوم.`
       };
     }
     return {
       active: false,
-      title: 'الأيام البيض القادمة',
-      text: 'في الشهر الهجري القادم.'
+      title: '',
+      text: 'الأيام البيض القادمة في الشهر الهجري القادم.'
     };
   };
 
@@ -1380,7 +1401,7 @@ function setHijriDate() {
   secondaryEl.textContent = gregorianText ? `الميلادي: ${gregorianText}` : '';
   whiteDaysEl.classList.toggle('is-active', whiteDaysState.active);
   whiteDaysEl.innerHTML = `
-    <div class="hijri-widget-note-title">${whiteDaysState.title}</div>
+    ${whiteDaysState.title ? `<div class="hijri-widget-note-title">${whiteDaysState.title}</div>` : ''}
     <div class="hijri-widget-note-text">${whiteDaysState.text}</div>
     <div class="hijri-widget-white-days">
       ${whiteDays.map(item => `
@@ -2154,7 +2175,7 @@ function toggleTheme() {
       renderQibla();
       setQStatus(qHasAbsoluteCompass ? 'تم تحديد موقعك والقبلة جاهزة ✓' : 'تم تحديد موقعك — اتبع السهم الذهبي نحو الشمال.', 'ok');
     }, err => {
-      setQStatus('ما قدرنا نجيب موقعك. تأكد إن الموقع مفعّل ومسموح للمتصفح.', 'danger');
+      setQStatus('تعذر تحديد موقعك. يُرجى التأكد من تفعيل خدمة الموقع ومنح المتصفح إذن الوصول.', 'danger');
     }, { enableHighAccuracy:true, timeout:15000, maximumAge:10000 });
   }
 
