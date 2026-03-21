@@ -1179,6 +1179,9 @@ function buildDuaCard(dua, context) {
           <button class="btn-share btn-image" onclick="downloadImage(${dua.id})" title="تحميل صورة">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </button>
+          <button class="btn-share btn-image" onclick="downloadImageFit(${dua.id})" title="تحميل صورة مناسبة">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M7 21h10"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -1753,6 +1756,13 @@ function drawRoundedRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+function triggerCanvasDownload(canvas, fileName) {
+  const a = document.createElement('a');
+  a.download = `${sanitizeFileName(fileName)}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
 async function downloadImage(id) {
   await document.fonts.load('700 86px Amiri');
   await document.fonts.load('700 62px Amiri');
@@ -1866,11 +1876,135 @@ const TEXT = '#F4E7D6';
     });
   }
 
-  const a = document.createElement('a');
-  a.download = `${sanitizeFileName(d.title)}.png`;
-  a.href = canvas.toDataURL('image/png');
-  a.click();
+  triggerCanvasDownload(canvas, d.title);
 
+  showToast('✓ جاري التحميل...');
+}
+
+async function downloadImageFit(id) {
+  await document.fonts.load('700 86px Amiri');
+  await document.fonts.load('700 62px Amiri');
+  await document.fonts.load('400 50px Amiri');
+  await document.fonts.ready;
+
+  const d = getDua(id);
+  if (!d) return;
+
+  const canvas = document.getElementById('img-canvas');
+  const ctx = canvas.getContext('2d');
+  const categories = getDuaCategories(d);
+  const contentFont = categories.includes('surat_al_kahf') ? 'Amiri Quran' : 'Amiri';
+  const contentText = getDisplayText(d.text || '');
+  const desc = (d.desc || '').trim();
+
+  const W = 1080;
+  const pagePadding = 72;
+  const innerPadding = 46;
+  const textWidth = W - 220;
+
+  canvas.width = W;
+  canvas.height = 2400;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.direction = 'rtl';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  const BG = '#5A1F2B';
+  const GOLD = '#D9B15F';
+  const TEXT = '#F4E7D6';
+
+  const titleY = 250;
+  const bodyTop = 360;
+
+  const textLayout = getTextLayout(ctx, contentText, textWidth, contentFont);
+  const duaLines = textLayout.lines;
+  const duaFontSize = textLayout.fontSize;
+  const duaLineHeight = textLayout.lineHeight;
+  const textBlockHeight = duaLines.length * duaLineHeight;
+
+  let descLines = [];
+  let descBoxHeight = 0;
+  const descLineHeight = 58;
+  if (desc) {
+    ctx.font = '400 46px Amiri';
+    descLines = wrapText(ctx, desc, textWidth - 40);
+    descBoxHeight = Math.max(110, descLines.length * descLineHeight + 44);
+  }
+
+  const cardHeight =
+    (bodyTop - 110) +
+    textBlockHeight +
+    (desc ? 42 + descBoxHeight : 0) +
+    90;
+
+  const H = Math.max(860, Math.min(3200, cardHeight + pagePadding * 2));
+  canvas.height = H;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.direction = 'rtl';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  ctx.fillStyle = BG;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(34, 34, W - 68, H - 68);
+
+  ctx.lineWidth = 2;
+  ctx.strokeRect(52, 52, W - 104, H - 104);
+
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 82px Amiri';
+  ctx.fillText('﷽', W / 2, 135);
+
+  ctx.font = '700 58px Amiri';
+  ctx.fillText(d.title || 'دعاء', W / 2, titleY);
+
+  const cardY = 300;
+  const cardX = pagePadding;
+  const cardW = W - pagePadding * 2;
+  const contentH = H - cardY - pagePadding;
+  ctx.fillStyle = 'rgba(240,230,208,0.08)';
+  drawRoundedRect(ctx, cardX, cardY, cardW, contentH, 28);
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(217,177,95,0.28)';
+  ctx.lineWidth = 2;
+  drawRoundedRect(ctx, cardX, cardY, cardW, contentH, 28);
+  ctx.stroke();
+
+  ctx.fillStyle = TEXT;
+  ctx.font = `${duaFontSize}px ${contentFont}`;
+  let y = bodyTop + innerPadding;
+
+  duaLines.forEach(line => {
+    if (line === '') {
+      y += Math.round(duaLineHeight * 0.7);
+    } else {
+      ctx.fillText(line, W / 2, y);
+      y += duaLineHeight;
+    }
+  });
+
+  if (descLines.length) {
+    const boxY = y + 12;
+    ctx.fillStyle = 'rgba(240,230,208,0.12)';
+    drawRoundedRect(ctx, cardX + 26, boxY, cardW - 52, descBoxHeight, 18);
+    ctx.fill();
+
+    ctx.fillStyle = TEXT;
+    ctx.font = '400 46px Amiri';
+    let descY = boxY + 52;
+    descLines.forEach(line => {
+      ctx.fillText(line, W / 2, descY);
+      descY += descLineHeight;
+    });
+  }
+
+  triggerCanvasDownload(canvas, `${d.title} - مناسب`);
   showToast('✓ جاري التحميل...');
 }
 // ═══════════════════ FONT SIZE ═══════════════════
