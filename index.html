@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>دليلك الإسلامي اليومي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Amiri+Quran&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
   --green-dark: #5A1F2B;
@@ -180,11 +180,7 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       gap: 8px;
       justify-content: center;
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 110px;
-      z-index: 99;
       flex-wrap: wrap;
-      transition: top 0.35s ease;
     }
     .tab-btn {
       padding: 8px 16px;
@@ -254,6 +250,105 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       color: var(--text-light);
       text-align: center;
       margin-top: 8px;
+    }
+
+    /* ─── Hijri Date Widget ─── */
+    .hijri-widget {
+      background:
+        radial-gradient(circle at top left, rgba(233, 201, 131, 0.24), transparent 38%),
+        linear-gradient(135deg, rgba(90, 31, 43, 0.96), rgba(123, 46, 59, 0.94));
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      color: #fff7ea;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .hijri-widget-main {
+      font-family: 'Amiri', serif;
+      font-size: 1.45rem;
+      line-height: 1.35;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .hijri-widget-sub {
+      color: rgba(255, 247, 234, 0.78);
+      font-size: 0.82rem;
+      position: relative;
+      z-index: 1;
+    }
+    .hijri-widget-note {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(233, 201, 131, 0.2);
+      color: #fff7ea;
+      font-size: 0.82rem;
+      position: relative;
+      z-index: 1;
+    }
+    .hijri-widget-note.is-active {
+      border-top-color: rgba(233, 201, 131, 0.45);
+    }
+    .hijri-widget-note-title {
+      color: var(--gold-light);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .hijri-widget-note-text {
+      color: #fff7ea;
+      line-height: 1.5;
+      flex: 1 1 220px;
+    }
+    .hijri-widget-white-days {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+    .hijri-white-day-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(233, 201, 131, 0.24);
+      border-radius: 999px;
+      padding: 6px 10px;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hijri-white-day-chip.active {
+      background: rgba(233, 201, 131, 0.18);
+      border-color: rgba(233, 201, 131, 0.56);
+    }
+    .hijri-white-day-hijri {
+      color: var(--gold-light);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .hijri-white-day-gregorian {
+      color: rgba(255, 247, 234, 0.86);
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+    @media (max-width: 520px) {
+      .hijri-widget-note {
+        align-items: flex-start;
+      }
+      .hijri-widget-note-text,
+      .hijri-widget-white-days {
+        flex-basis: 100%;
+      }
+    }
+    body.dark .hijri-widget {
+      background:
+        radial-gradient(circle at top left, rgba(233, 201, 131, 0.2), transparent 38%),
+        linear-gradient(135deg, rgba(44, 20, 28, 0.98), rgba(68, 28, 39, 0.98));
     }
 
     /* ─── Section Heading ─── */
@@ -360,14 +455,24 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
     }
     body.dark .dua-text-box { background: #111; }
     .dua-text {
-      font-family: 'Amiri', serif;
+      font-family: 'Noto Naskh Arabic', 'Amiri', serif;
       font-size: var(--font-size);
-      line-height: 2;
-      text-align: center;
+      line-height: 2.15;
+      text-align: right;
       color: var(--text-main);
       transition: font-size 0.2s;
       white-space: pre-line;
-
+      letter-spacing: 0.01em;
+    }
+    .dua-card[data-category~="surat_al_kahf"] .dua-text-box {
+      padding: 18px 18px;
+    }
+    .dua-card[data-category~="surat_al_kahf"] .dua-text {
+      font-family: 'Amiri Quran', 'Amiri', 'Noto Naskh Arabic', serif;
+      font-size: clamp(21px, 2.3vw, 26px) !important;
+      line-height: 2.25;
+      text-align: justify;
+      text-wrap: pretty;
     }
 
     .dua-desc {
@@ -844,6 +949,12 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       <div class="daily-dua-desc" id="daily-dua-desc"></div>
     </div> 
 
+    <section class="hijri-widget" aria-label="التاريخ الهجري اليوم">
+      <div class="hijri-widget-main" id="hijri-date-primary">...</div>
+      <div class="hijri-widget-sub" id="hijri-date-secondary"></div>
+      <div class="hijri-widget-note" id="hijri-white-days-note"></div>
+    </section>
+
     <!-- Section Heading -->
     <div class="section-heading">
       <h2>📖 الأدعية والأذكار</h2>
@@ -947,6 +1058,7 @@ let currentGroup = 'all';
 let currentSub = 'all';
 let currentSearch = '';
 let searchOpen = false;
+let hijriRefreshTimer = null;
 
 const CATEGORY_GROUPS = [
   { id: 'all', label: '🔖 الكل', categories: [] },
@@ -982,7 +1094,7 @@ const CATEGORY_GROUPS = [
     id: 'misc',
     label: '📚 أذكار متفرقة',
     title: 'متفرقات',
-    categories: ['misc', 'death', 'bathroom', 'food', 'home', 'hajj', 'quran_khatm'],
+    categories: ['misc', 'death', 'bathroom', 'food', 'home', 'hajj', 'quran_khatm', 'surat_al_kahf'],
     subs: [
       { id: 'misc', label: '📚 أذكار متفرقة' },
       { id: 'death', label: '🕯️ أدعية للميت' },
@@ -990,7 +1102,8 @@ const CATEGORY_GROUPS = [
       { id: 'food', label: '🍽️ أذكار الطعام' },
       { id: 'home', label: '🏠 أذكار المنزل' },
       { id: 'hajj', label: '🕋 أذكار الحج والعمرة' },
-      { id: 'quran_khatm', label: '📘 دعاء ختم القرآن الكريم' }
+      { id: 'quran_khatm', label: '📘 دعاء ختم القرآن الكريم' },
+      { id: 'surat_al_kahf', label: '📖 سورة الكهف' }
     ]
   },
   {
@@ -1013,9 +1126,10 @@ function buildDuaCard(dua, context) {
   const cur = hasCounter ? (counters[dua.id] || 0) : 0;
   const done = hasCounter && cur >= dua.count;
   const pct = hasCounter ? Math.min((cur / dua.count) * 100, 100) : 0;
+  const categoriesAttr = getDuaCategories(dua).join(' ');
 
   return `
-    <div class="dua-card" id="dua-${dua.id}-${context}">
+    <div class="dua-card" id="dua-${dua.id}-${context}" data-category="${categoriesAttr}">
       <div class="dua-header">
         <span class="dua-icon">📖</span>
         <span class="dua-title">${dua.title}</span>
@@ -1070,6 +1184,177 @@ function setDailyDua() {
   const daily = duas[dayOfYear % duas.length];
   document.getElementById('daily-dua-text').textContent = daily.text;
   document.getElementById('daily-dua-desc').textContent = daily.desc;
+}
+
+function setHijriDate() {
+  const primaryEl = document.getElementById('hijri-date-primary');
+  const secondaryEl = document.getElementById('hijri-date-secondary');
+  const whiteDaysEl = document.getElementById('hijri-white-days-note');
+  if (!primaryEl || !secondaryEl || !whiteDaysEl) return;
+
+  const now = new Date();
+  const timeZone = 'Asia/Kuwait';
+  const hijriPrimaryOptions = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone
+  };
+  const hijriSecondaryOptions = {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone
+  };
+
+  const formatWithLocale = (locale, options) => {
+    try {
+      return new Intl.DateTimeFormat(locale, options).format(now);
+    } catch (error) {
+      return '';
+    }
+  };
+
+  const getHijriDayNumber = () => {
+    const locales = [
+      'en-u-ca-islamic-umalqura',
+      'en-u-ca-islamic',
+      'ar-SA-u-ca-islamic-umalqura',
+      'ar-SA-u-ca-islamic'
+    ];
+
+    for (const locale of locales) {
+      try {
+        const parts = new Intl.DateTimeFormat(locale, {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          timeZone
+        }).formatToParts(now);
+        const dayPart = parts.find(part => part.type === 'day');
+        if (!dayPart) continue;
+        const normalized = dayPart.value.replace(/[^\d]/g, '');
+        const dayNumber = Number.parseInt(normalized, 10);
+        if (Number.isInteger(dayNumber)) return dayNumber;
+      } catch (error) {
+        // Try the next supported locale/calendar combination.
+      }
+    }
+
+    return null;
+  };
+
+  const getWhiteDaysMessage = (hijriDay) => {
+    if (!Number.isInteger(hijriDay)) {
+      return {
+        active: false,
+        title: 'الأيام البيض',
+        text: '13 و14 و15 من كل شهر هجري.'
+      };
+    }
+    if (hijriDay >= 13 && hijriDay <= 15) {
+      return {
+        active: true,
+        title: 'اليوم من الأيام البيض',
+        text: `${hijriDay} هجري.`
+      };
+    }
+    if (hijriDay < 13) {
+      return {
+        active: false,
+        title: 'الأيام البيض القادمة',
+        text: `بعد ${13 - hijriDay} يوم.`
+      };
+    }
+    return {
+      active: false,
+      title: 'الأيام البيض القادمة',
+      text: 'في الشهر الهجري القادم.'
+    };
+  };
+
+  const getGregorianDateForHijriDay = (targetDay) => {
+    const maxDaysToScan = 60;
+    for (let offset = 0; offset < maxDaysToScan; offset++) {
+      const candidate = new Date(now);
+      candidate.setDate(candidate.getDate() + offset);
+
+      try {
+        const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric',
+          timeZone
+        }).formatToParts(candidate);
+
+        const dayPart = parts.find(part => part.type === 'day');
+        const dayNumber = Number.parseInt((dayPart?.value || '').replace(/[^\d]/g, ''), 10);
+        if (dayNumber !== targetDay) continue;
+
+        try {
+          return new Intl.DateTimeFormat('ar-KW', {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'long',
+            timeZone
+          }).format(candidate);
+        } catch (error) {
+          return '';
+        }
+      } catch (error) {
+        return '';
+      }
+    }
+
+    return '';
+  };
+
+  const hijriText =
+    formatWithLocale('ar-SA-u-ca-islamic-umalqura', hijriPrimaryOptions) ||
+    formatWithLocale('ar-SA-u-ca-islamic', hijriPrimaryOptions) ||
+    formatWithLocale('ar-u-ca-islamic', hijriPrimaryOptions);
+
+  const gregorianText =
+    formatWithLocale('ar-KW', hijriSecondaryOptions) ||
+    formatWithLocale('ar', hijriSecondaryOptions);
+  const hijriDayNumber = getHijriDayNumber();
+  const whiteDaysState = getWhiteDaysMessage(hijriDayNumber);
+  const whiteDays = [13, 14, 15].map(day => ({
+    day,
+    gregorian: getGregorianDateForHijriDay(day)
+  }));
+
+  primaryEl.textContent = hijriText || 'التاريخ الهجري غير متوفر على هذا الجهاز';
+  secondaryEl.textContent = gregorianText ? `الميلادي: ${gregorianText}` : '';
+  whiteDaysEl.classList.toggle('is-active', whiteDaysState.active);
+  whiteDaysEl.innerHTML = `
+    <div class="hijri-widget-note-title">${whiteDaysState.title}</div>
+    <div class="hijri-widget-note-text">${whiteDaysState.text}</div>
+    <div class="hijri-widget-white-days">
+      ${whiteDays.map(item => `
+        <div class="hijri-white-day-chip ${hijriDayNumber === item.day ? 'active' : ''}">
+          <span class="hijri-white-day-hijri">${item.day} هجري</span>
+          <span class="hijri-white-day-gregorian">${item.gregorian || 'الميلادي غير متوفر'}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function scheduleHijriRefresh() {
+  if (hijriRefreshTimer) clearTimeout(hijriRefreshTimer);
+
+  const now = new Date();
+  const kuwaitNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kuwait' }));
+  const nextMidnight = new Date(kuwaitNow);
+  nextMidnight.setHours(24, 0, 0, 0);
+
+  const msUntilRefresh = Math.max(nextMidnight.getTime() - kuwaitNow.getTime(), 60 * 1000);
+  hijriRefreshTimer = setTimeout(() => {
+    setHijriDate();
+    scheduleHijriRefresh();
+  }, msUntilRefresh);
 }
 
 // ═══════════════════ TAB SWITCHING ═══════════════════
@@ -1533,11 +1818,6 @@ const TEXT = '#F4E7D6';
     });
   }
 
-  // footer
-  ctx.fillStyle = GOLD;
-  ctx.font = '700 34px Amiri';
-  ctx.fillText(' اللهم تقبل منا ', W / 2, 1848);
-
   const a = document.createElement('a');
   a.download = `${sanitizeFileName(d.title)}.png`;
   a.href = canvas.toDataURL('image/png');
@@ -1721,33 +2001,6 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// ═══════════════════ SCROLL HIDE/SHOW HEADER ═══════════════════
-(function () {
-  let lastY = 0;
-  const THRESHOLD = 8; // px before we react
-  window.addEventListener('scroll', () => {
-    const currentY = window.scrollY;
-    const header = document.querySelector('header');
-    const nav    = document.getElementById('main-nav');
-    const headerH = header.offsetHeight;
-
-    if (currentY <= 10) {
-      // At top — always show header
-      header.classList.remove('hidden');
-      nav.style.top = headerH + 'px';
-    } else if (currentY > lastY + THRESHOLD) {
-      // Scrolling DOWN — hide header, nav jumps to top
-      header.classList.add('hidden');
-      nav.style.top = '0px';
-    } else if (currentY < lastY - THRESHOLD) {
-      // Scrolling UP — show header, nav follows
-      header.classList.remove('hidden');
-      nav.style.top = headerH + 'px';
-    }
-    lastY = currentY;
-  }, { passive: true });
-})();
-
 // ═══════════════════ INIT ═══════════════════
 document.addEventListener('DOMContentLoaded', () => {
   // Restore theme
@@ -1755,6 +2008,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('dark');
     document.getElementById('theme-btn').textContent = '☀️';
   }
+  setHijriDate();
+  scheduleHijriRefresh();
   // Load duas from duas-data.js
   if (typeof DUAS_DATA !== 'undefined') {
     duas = DUAS_DATA;
