@@ -125,12 +125,11 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       padding-right: 10px;
     }
     .theme-btn,
-    .search-toggle-btn {
+    .search-toggle-btn,
+    .text-mode-btn {
       background: rgba(255,255,255,0.15);
       border: none;
       color: #fff;
-      font-size: 1.2rem;
-      width: 38px;
       height: 38px;
       border-radius: 50%;
       cursor: pointer;
@@ -139,9 +138,24 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       justify-content: center;
       transition: background 0.2s;
     }
+    .theme-btn,
+    .search-toggle-btn {
+      font-size: 1.2rem;
+      width: 38px;
+    }
+    .text-mode-btn {
+      width: auto;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
     .theme-btn:hover,
     .search-toggle-btn:hover,
-    .search-toggle-btn.active {
+    .search-toggle-btn.active,
+    .text-mode-btn:hover,
+    .text-mode-btn.active {
       background: rgba(255,255,255,0.25);
     }
     .header-search-panel {
@@ -916,6 +930,7 @@ background: linear-gradient(135deg, #5A1F2B 0%, #7B2E3B 100%);
       <button onclick="changeFont(-1)" aria-label="تصغير الخط">−</button>
       <button class="font-T" onclick="resetFont()" aria-label="إعادة حجم الخط">T</button>
     </div>
+    <button class="text-mode-btn" id="text-mode-btn" onclick="togglePlainTextMode()" aria-label="إزالة التشكيل">بدون تشكيل</button>
     <button class="search-toggle-btn" id="search-toggle-btn" onclick="toggleSearch()" aria-label="فتح البحث">🔎</button>
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" aria-label="تبديل الوضع">🌙</button>
   </div>
@@ -1059,6 +1074,7 @@ let currentSub = 'all';
 let currentSearch = '';
 let searchOpen = false;
 let hijriRefreshTimer = null;
+let plainTextMode = false;
 
 const CATEGORY_GROUPS = [
   { id: 'all', label: '🔖 الكل', categories: [] },
@@ -1127,6 +1143,7 @@ function buildDuaCard(dua, context) {
   const done = hasCounter && cur >= dua.count;
   const pct = hasCounter ? Math.min((cur / dua.count) * 100, 100) : 0;
   const categoriesAttr = getDuaCategories(dua).join(' ');
+  const renderedText = getDisplayText(dua.text);
 
   return `
     <div class="dua-card" id="dua-${dua.id}-${context}" data-category="${categoriesAttr}">
@@ -1135,7 +1152,7 @@ function buildDuaCard(dua, context) {
         <span class="dua-title">${dua.title}</span>
       </div>
       <div class="dua-text-box">
-        <div class="dua-text" style="font-size:${fontSize}px">${dua.text}</div>
+        <div class="dua-text" style="font-size:${fontSize}px">${renderedText}</div>
       </div>
       <div class="dua-desc">${dua.desc}</div>
 
@@ -1182,8 +1199,39 @@ function renderDuas(list, containerId, context) {
 function setDailyDua() {
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
   const daily = duas[dayOfYear % duas.length];
-  document.getElementById('daily-dua-text').textContent = daily.text;
+  document.getElementById('daily-dua-text').textContent = getDisplayText(daily.text);
   document.getElementById('daily-dua-desc').textContent = daily.desc;
+}
+
+function stripArabicHarakat(text) {
+  return String(text || '').replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '');
+}
+
+function getDisplayText(text) {
+  return plainTextMode ? stripArabicHarakat(text) : String(text || '');
+}
+
+function updateTextModeButton() {
+  const button = document.getElementById('text-mode-btn');
+  if (!button) return;
+  button.classList.toggle('active', plainTextMode);
+  button.textContent = plainTextMode ? 'بالتشكيل' : 'بدون تشكيل';
+  button.setAttribute('aria-label', plainTextMode ? 'إظهار التشكيل' : 'إزالة التشكيل');
+}
+
+function rerenderVisibleContent() {
+  setDailyDua();
+  renderMainDuas();
+  if (currentMood) {
+    renderDuas(duas.filter(d => d.moods.includes(currentMood)), 'mood-list', 'mood');
+  }
+}
+
+function togglePlainTextMode() {
+  plainTextMode = !plainTextMode;
+  localStorage.setItem('plainTextMode', plainTextMode ? '1' : '0');
+  updateTextModeButton();
+  rerenderVisibleContent();
 }
 
 function setHijriDate() {
@@ -2008,6 +2056,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('dark');
     document.getElementById('theme-btn').textContent = '☀️';
   }
+  plainTextMode = localStorage.getItem('plainTextMode') === '1';
+  updateTextModeButton();
   setHijriDate();
   scheduleHijriRefresh();
   // Load duas from duas-data.js
